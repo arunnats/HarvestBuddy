@@ -174,11 +174,11 @@
     z-index: 999; /* Adjust the value as needed */
     margin: 0 ;
     padding: 0 ;
-    background-color: var(--backgorund-color); 
     color: var(--font-color);
+    background-color: var(--background-color);
   }
 
 #footer_text{
     color: var(--button-shadow-color) ;
-    opacity: 0.5;
+    opacity: 1 ;
 }

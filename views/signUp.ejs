@@ -3,22 +3,23 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-		<title>Landing Page</title>
+		<title>Sign Up</title>
 
 		<!-- css style sheets -->
-		<link rel="stylesheet" href=".. 	 /css/loginsignupForm.css" />
+		<link rel="stylesheet" href="../css/loginsignupForm.css" />
 		<link rel = "stylesheet" href = "../css/navbar.css">
 		<link rel = "stylesheet" href = "../css/styles.css">
 		<link rel="stylesheet" href="../css/button.css" />
 
 		<!--google fonds -->
+
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
 			href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
 			rel="stylesheet"
 		/>
+
 		<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 
 		<!-- bootsrap  -->
@@ -26,7 +27,8 @@
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 	
 		<style>
-			.main{
+			
+		  .main {
 				position: fixed;
 				display: flex ;
 				align-items: center ;
@@ -36,20 +38,18 @@
 				width: 100%; /* Occupy full width */
 				height: 100%; /* Occupy full height */
 				background-color: var(--background-color); /* Set background color */
-				z-index: 1; /* Place it behind other content */
-				flex-direction: column ;
-			  }
-			  
-			  .title{
-				display: flex ;
-				align-items: center ;
-				justify-content: center ;
-				color: var(--nav-color);
-				font-size: 13vw;
-				width : 100% ;
-				margin: 0 0 ;
-			  }
-			  
+				flex-wrap: wrap ;
+				gap: 10vw ;
+				z-index: 1; 
+				overflow: auto; 
+			}
+			
+			@media only screen and (max-width: 767px) {
+				.main {
+					padding-top: 10vh ;
+					padding-bottom: 20vh;
+				}
+			}
 		</style>
 	</head>
 	<body>
@@ -85,16 +85,80 @@
 			  </div>
 			</div>
 		  </nav>
-		  
-		<div class="main">
-			<div class="title">
-				<p class = "vt323-regular">Harvest Buddy</p>
-			</div>
-			<button class="button vt323-regular" style = "width : 200px ;" onclick="redirectTo('/login')">Login</button>
-			<br />
-			<button class="button vt323-regular" style = "width : 200px ;" onclick="redirectTo('/signup')">Sign Up</button>
+
+		  <div class="main">
+			<form class="form" action="/signup" method="post">
+				<div class="title noto-sans-title ">
+					Create an Account<br /><span>get started today</span>
+				</div>
+				<input
+					type="text"
+					placeholder="Full Name"
+					name="name"
+					class="input noto-sans-title"
+					required
+				/>
+				<input
+					type="email"
+					placeholder="Email"
+					name="email"
+					class="input noto-sans-title"
+					required
+				/>
+				<input
+					type="text"
+					placeholder="Phone Number"
+					name="phone"
+					class="input noto-sans-title"
+					required
+				/>
+				<input
+					type="password"
+					placeholder="Password"
+					name="password"
+					class="input"
+					required
+				/>
+				<input
+					type="password"
+					placeholder="Confirm Password"
+					name="confirmPassword"
+					class="input"
+					required
+				/>
+			</form>
+
+			<form class="form" action="/signup" method="post">
+				<div class="title noto-sans-title">
+					Enter your farm's location,<br /><span>get real-time updates</span>
+				</div>
+				<input
+					type="text"
+					placeholder="Latitude"
+					name="latitude"
+					class="input noto-sans-title"
+					required
+				/>
+				<input
+					type="text"
+					placeholder="Longitude"
+					name="longitude"
+					class="input noto-sans-title"
+					required
+				/>
+				<input
+					type="text"
+					placeholder="Location Name"
+					name="locationName"
+					class="input noto-sans-title"
+					required
+				/>
+				<button type="submit" class="button-confirm noto-sans-title vt323-regular">
+					Let's go →
+				</button>
+			</form>
 		</div>
-		
+
 		<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 border-top" id = "footer">
 			<div class="col-md-4 d-flex align-items-center">
 			  <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
@@ -109,24 +173,9 @@
 			  <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
 			</ul>
 		  </footer>
-		
 		<script>
-			function redirectTo(url) {
-				window.location.href = url;
-			}
-			
 			const darkModeCheckbox = document.getElementById('dark-mode-checkbox');
 
-<<<<<<< Updated upstream
-    	darkModeCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-        
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-        }
-    });
-=======
 			darkModeCheckbox.addEventListener('change', function() {
 			if (this.checked) {
 			
@@ -135,8 +184,6 @@
 				document.body.classList.remove('dark-mode');
 			}
 		});
-
->>>>>>> Stashed changes
 		</script>
 	</body>
 </html>
