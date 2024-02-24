@@ -128,5 +128,9 @@ app.get("/change-password", (req, res) => {
 	}
 });
 
+app.get("/test", (req, res) => {
+	res.render("locationSelection");
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
