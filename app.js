@@ -7,8 +7,11 @@ const User = require("./public/mongo/user");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
+const bodyParser = require("body-parser");
 
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect(
 	"mongodb+srv://login:DouglasAdams42@cluster0.bpavk21.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -199,73 +202,122 @@ app.get("/inventory", isAuthenticated, (req, res) => {
 	res.render("inventory", { user });
 });
 
-// Handle form submission for adding an item to inventory
-app.post("/inventory/add", isAuthenticated, async (req, res) => {
+app.post("/inventory", async (req, res) => {
+	const {
+		category,
+		operation,
+		newItemName,
+		initialQuantity,
+		existingItemName,
+		modifyQuantity,
+	} = req.body;
+
+	console.log(req.body);
+
 	try {
-		const { category, itemName, quantity } = req.body;
-		const user = req.user;
+		const user = await User.findById("userId");
 
-		// Validate inputs
-		if (!category || !itemName || isNaN(quantity)) {
-			throw new Error("Invalid input. Please provide all required fields.");
+		if (!user) {
+			return res.status(404).json({ error: "User not found" });
 		}
 
-		// Find the selected category in the user's inventory
-		const categoryInventory = user.inventory[category];
+		// Helper function to find an item by name in the specified category
+		const findItemByName = (itemName) => {
+			return user.inventory[category].find((item) => item.name === itemName);
+		};
 
-		// Check if the item already exists
-		const existingItem = categoryInventory.find(
-			(item) => item.name === itemName
-		);
+		// Helper function to create a new item
+		const createNewItem = () => {
+			const newItem = {
+				name: newItemName,
+				quantity: parseInt(initialQuantity) || 0,
+			};
+			user.inventory[category].push(newItem);
+			return newItem;
+		};
 
-		if (existingItem) {
-			// Update quantity if the item exists
-			existingItem.quantity += parseInt(quantity);
+		// Helper function to update the quantity of an existing item
+		const updateItemQuantity = (item, quantityChange) => {
+			item.quantity = Math.max(0, item.quantity + quantityChange);
+		};
+
+		// Logic based on the operation
+		if (operation === "new") {
+			// Check if an item with the same name already exists
+			const existingItem = findItemByName(newItemName);
+			if (existingItem) {
+				return res
+					.status(400)
+					.json({ error: "Item with the same name already exists." });
+			} else {
+				// Create a new item
+				const newItem = createNewItem();
+				await user.save(); // Save the updated user to the database
+				return res.json({ message: "New item created successfully.", newItem });
+			}
+		} else if (operation === "add" || operation === "subtract") {
+			// Check if an existing item is provided
+			if (!existingItemName) {
+				return res.status(400).json({
+					error: "Existing item name is required for add/subtract operation.",
+				});
+			} else {
+				// Find the existing item
+				const existingItem = findItemByName(existingItemName);
+				if (!existingItem) {
+					return res.status(404).json({ error: "Existing item not found." });
+				} else {
+					// Perform add/subtract operation
+					const quantityChange = parseInt(modifyQuantity) || 0;
+					if (operation === "add") {
+						updateItemQuantity(existingItem, quantityChange);
+						await user.save(); // Save the updated user to the database
+						return res.json({
+							message: "Quantity added successfully.",
+							updatedItem: existingItem,
+						});
+					} else {
+						// Subtract operation
+						updateItemQuantity(existingItem, -quantityChange);
+						await user.save(); // Save the updated user to the database
+						return res.json({
+							message: "Quantity subtracted successfully.",
+							updatedItem: existingItem,
+						});
+					}
+				}
+			}
 		} else {
-			// Add a new item if it doesn't exist
-			categoryInventory.push({ name: itemName, quantity: parseInt(quantity) });
+			return res.status(400).json({ error: "Invalid operation specified." });
 		}
-
-		await user.save();
-
-		res.redirect("/inventory");
 	} catch (error) {
-		console.error("Error adding item to inventory:", error.message);
-		res.redirect("/inventory");
+		console.error("Error processing /inventory POST request:", error);
+		return res.status(500).json({ error: "Internal server error." });
 	}
 });
 
-// Handle form submission for updating an item in inventory
-app.post("/inventory/update", isAuthenticated, async (req, res) => {
+app.get("/api/items", async (req, res) => {
 	try {
-		const { category, itemName, newQuantity } = req.body;
-		const user = req.user;
+		const category = req.query.category;
 
-		// Validate inputs
-		if (!category || !itemName || isNaN(newQuantity)) {
-			throw new Error("Invalid input. Please provide all required fields.");
+		// Check for required category parameter
+		if (!category) {
+			res.status(400).json({ error: "Category parameter is required." });
+			return;
 		}
 
-		// Find the selected category in the user's inventory
-		const categoryInventory = user.inventory[category];
+		// Retrieve all user data (assuming a small number of users)
+		const users = await User.find();
 
-		// Check if the item exists
-		const existingItem = categoryInventory.find(
-			(item) => item.name === itemName
-		);
+		// Extract item names from the specified category across all users
+		const itemNames = users
+			.flatMap((user) => user.inventory[category])
+			.map((item) => item.name);
 
-		if (existingItem) {
-			// Update quantity if the item exists
-			existingItem.quantity = parseInt(newQuantity);
-			await user.save();
-		} else {
-			throw new Error("Item not found in inventory.");
-		}
-
-		res.redirect("/inventory");
+		res.json({ itemNames });
 	} catch (error) {
-		console.error("Error updating item in inventory:", error.message);
-		res.redirect("/inventory");
+		console.error("Error fetching item names:", error);
+		res.status(500).json({ error: "Internal server error." });
 	}
 });
 

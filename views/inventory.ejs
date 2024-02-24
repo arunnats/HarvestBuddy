@@ -6,7 +6,6 @@
 		<title>Content</title>
 		<link rel="stylesheet" href="../css/loginsignupForm.css" />
 		<link rel="stylesheet" href="../css/button.css" />
-		<!-- <link rel="stylesheet" href="../css/content.css" /> -->
 		<link rel="stylesheet" href="../css/inventory.css" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -118,7 +117,6 @@
 			</div>
 
 			<div id="newOperationFields">
-				<!-- Fields for the 'New' operation -->
 				<input
 					type="text"
 					placeholder="New Item Name"
@@ -134,13 +132,8 @@
 			</div>
 
 			<div id="addRemoveOperationFields">
-				<!-- Fields for the 'Add' and 'Subtract' operations -->
 				<select name="existingItemName" class="input noto-sans-title">
-					<!-- Populate this dropdown dynamically with existing item names -->
-					<option value="item1">Item 1</option>
-					<option value="item2">Item 2</option>
-					<option value="item3">Item 3</option>
-					<!-- Add more options as needed -->
+					<!-- Options will be dynamically populated here -->
 				</select>
 				<input
 					type="text"
@@ -163,6 +156,13 @@
 			const addRemoveOperationFields = document.getElementById(
 				"addRemoveOperationFields"
 			);
+			const existingItemNameDropdown = document.querySelector(
+				'select[name="existingItemName"]'
+			);
+
+			// Initially hide the input fields
+			newOperationFields.style.display = "none";
+			addRemoveOperationFields.style.display = "none";
 
 			categorySelector.addEventListener("change", (event) => {
 				const selectedCategory = event.target.value;
@@ -171,10 +171,55 @@
 				} Item`;
 			});
 
-			addUpdateForm.addEventListener("submit", (event) => {
-				event.preventDefault(); // Prevent the form from submitting for now
+			addUpdateForm.addEventListener("submit", async (event) => {
+				event.preventDefault();
+
+				// Check if the form is valid (add validation logic if needed)
+				const isValid = validateForm();
+				if (!isValid) {
+					return;
+				}
+
+				// Fetch and populate existing item names in the dropdown
+				await fetchAndPopulateItemNames();
+
+				// Log data before submission
+				console.log("Form Data Before Submission:", {
+					category: categorySelector.querySelector(
+						'input[name="category"]:checked'
+					).value,
+					operation: document.querySelector('input[name="operation"]:checked')
+						.value,
+					newItemName: document.querySelector('input[name="newItemName"]')
+						.value,
+					initialQuantity: document.querySelector(
+						'input[name="initialQuantity"]'
+					).value,
+					existingItemName: document.querySelector(
+						'select[name="existingItemName"]'
+					).value,
+					modifyQuantity: document.querySelector('input[name="modifyQuantity"]')
+						.value,
+				});
+
 				// Add your logic to handle form submission via AJAX or traditional form submission
+				submitForm();
+
+				// Clear the form fields after submission
+				addUpdateForm.reset();
 			});
+
+			// Function to handle form submission (replace with your logic)
+			function submitForm() {
+				// Add your logic to send the form data to the server
+				console.log("Form Submitted");
+			}
+
+			// Function to validate the form (add your validation logic)
+			function validateForm() {
+				// Add your validation logic here
+				return true; // Return true if the form is valid, false otherwise
+			}
 
 			const operationRadioButtons = document.querySelectorAll(
 				'input[name="operation"]'
@@ -190,6 +235,43 @@
 					}
 				});
 			});
+
+			// Function to fetch and populate existing item names in the dropdown
+			async function fetchAndPopulateItemNames() {
+				try {
+					const category = categorySelector.querySelector(
+						'input[name="category"]:checked'
+					).value;
+					const response = await fetch(`/api/items?category=${category}`);
+
+					if (!response.ok) {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+
+					const data = await response.json();
+
+					// Log fetched data
+					console.log("Fetched Data:", data);
+
+					// Clear existing options
+					existingItemNameDropdown.innerHTML =
+						'<option value="">Select Item</option>';
+
+					// Populate dropdown with fetched item names
+					data.itemNames.forEach((itemName) => {
+						const option = document.createElement("option");
+						option.value = itemName;
+						option.textContent = itemName;
+						existingItemNameDropdown.appendChild(option);
+					});
+				} catch (error) {
+					console.error("Error fetching and populating item names:", error);
+				}
+			}
+
+			// Call the function initially and whenever the category changes
+			fetchAndPopulateItemNames();
+			categorySelector.addEventListener("change", fetchAndPopulateItemNames);
 		</script>
 	</body>
 </html>
