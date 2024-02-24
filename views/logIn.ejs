@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>Login</title>
 		<link rel="stylesheet" href="../css/loginsignupForm.css" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,7 +21,7 @@
 	</head>
 	<body>
 		<div class="main">
-			<form class="form">
+			<form class="form" action="/login" method="post">
 				<div class="title noto-sans-title">
 					Welcome,<br /><span>log in to continue</span>
 				</div>
@@ -37,7 +37,9 @@
 					name="password"
 					class="input"
 				/>
-				<button class="button-confirm noto-sans-title">Let`s go →</button>
+				<button type="submit" class="button-confirm noto-sans-title">
+					Let's go →
+				</button>
 			</form>
 		</div>
 	</body>
