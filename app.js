@@ -347,6 +347,33 @@ app.get("/api/seeds", async (req, res) => {
 	}
 });
 
+app.get("/api/inventory/categories", async (req, res) => {
+	try {
+		const users = await User.find();
+
+		// Extract unique categories from all users
+		const categoriesSet = new Set();
+
+		users.forEach((user) => {
+			const inventory = user.inventory || {};
+
+			Object.keys(inventory).forEach((category) => {
+				// Exclude 'seeds' category
+				if (category !== "seeds") {
+					categoriesSet.add(category);
+				}
+			});
+		});
+		console.log(categoriesSet);
+		const categories = Array.from(categoriesSet);
+		console.log(categories);
+		res.json({ categories });
+	} catch (error) {
+		console.error("Error fetching inventory categories:", error);
+		res.status(500).json({ error: "Internal server error." });
+	}
+});
+
 app.get("/grow-crop", isAuthenticated, (req, res) => {
 	const user = req.user;
 
