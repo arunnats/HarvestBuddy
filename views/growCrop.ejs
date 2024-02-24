@@ -114,6 +114,12 @@
                     <option value="">Select Item</option>
                     <!-- Options will be dynamically populated based on the selected category -->
                 </select>
+                
+                <label for="amountUsed">Amount Used:</label>
+                <input type="number" id="amountUsed" name="amountUsed" class="input noto-sans-title" required>
+
+                <label for="frequency">Frequency of Usage (days):</label>
+                <input type="number" id="frequency" name="frequency" class="input noto-sans-title" required>
             `;
 
 				resourceUsageContainer.appendChild(resourceUsageForm);
@@ -164,8 +170,8 @@
 									// Populate the item name dropdown
 									items.forEach((item) => {
 										const option = document.createElement("option");
-										option.value = item.name;
-										option.textContent = item.name;
+										option.value = item;
+										option.textContent = item;
 										itemNameDropdown.appendChild(option);
 									});
 
