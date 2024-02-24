@@ -6,6 +6,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const User = require("./public/mongo/user");
 const path = require("path");
 const bcrypt = require("bcrypt");
+const axios = require("axios");
 
 const app = express();
 
@@ -59,6 +60,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 
+function isAuthenticated(req, res, next) {
+	if (req.isAuthenticated()) {
+		return next();
+	} else {
+		res.redirect("/login");
+	}
+}
 app.get("/", (req, res) => {
 	if (req.isAuthenticated()) {
 		res.redirect("/content");
@@ -72,9 +80,44 @@ app.get("/logout", (req, res) => {
 	res.redirect("/");
 });
 
-app.get("/content", (req, res) => {
+app.get("/content", async (req, res) => {
 	if (req.isAuthenticated()) {
-		res.render("content");
+		const { farm, name } = req.user;
+
+		if (farm && farm.latitude && farm.longitude) {
+			const { latitude, longitude, name: farmName } = farm;
+
+			try {
+				const apiResponse = await axios.get(
+					`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,rain,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m&daily=sunrise,sunset,uv_index_max&timezone=auto&past_days=1&forecast_days=1`
+				);
+
+				const apiData = apiResponse.data;
+
+				// Extracting current details from the API response
+				const currentDetails = apiData.current;
+
+				res.render("content", {
+					name,
+					farmName,
+					location: `${latitude}, ${longitude}`,
+					time: currentDetails.time,
+					elevation: apiData.elevation,
+					humidity: currentDetails.relative_humidity_2m,
+					rain: currentDetails.rain,
+					windSpeed: currentDetails.wind_speed_10m,
+					uvIndexMax: apiData.daily.uv_index_max[1], // Assuming you want the UV index max for the current day
+				});
+
+				console.log(apiData);
+			} catch (error) {
+				console.error("Error fetching data from the API:", error);
+				res.redirect("/");
+			}
+		} else {
+			console.error("User's farm details are missing");
+			res.redirect("/");
+		}
 	} else {
 		res.redirect("/");
 	}
@@ -97,20 +140,26 @@ app.get("/signup", (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-	const { name, email, password, confirmPassword } = req.body;
+	const {
+		name,
+		email,
+		password,
+		confirmPassword,
+		latitude,
+		longitude,
+		locationName,
+	} = req.body;
 
-	// Check if passwords match
 	if (password !== confirmPassword) {
 		console.error("Passwords don't match");
-		return res.redirect("/signup"); // Passwords don't match, handle this as needed
+		return res.redirect("/signup");
 	}
 
 	try {
-		// Check if the email is already registered
 		const existingUser = await User.findOne({ email: email });
 		if (existingUser) {
 			console.error("User with this email already exists");
-			return res.redirect("/signup"); // User already exists, handle this as needed
+			return res.redirect("/signup");
 		}
 
 		const hashedPassword = await bcrypt.hash(password, 10);
@@ -118,11 +167,17 @@ app.post("/signup", async (req, res) => {
 			name: name,
 			email: email,
 			password: hashedPassword,
+			farm: {
+				name: locationName,
+				latitude: parseFloat(latitude),
+				longitude: parseFloat(longitude),
+			},
 		});
 
 		await newUser.save();
 		console.log("User registered successfully");
-		res.redirect("/login");
+
+		res.redirect("/content");
 	} catch (error) {
 		console.error("Error during signup:", error);
 		res.redirect("/signup");
@@ -138,8 +193,80 @@ app.post(
 	})
 );
 
-app.get("/test", (req, res) => {
-	res.render("locationSelection");
+app.get("/inventory", isAuthenticated, (req, res) => {
+	const user = req.user;
+
+	res.render("inventory", { user });
+});
+
+// Handle form submission for adding an item to inventory
+app.post("/inventory/add", isAuthenticated, async (req, res) => {
+	try {
+		const { category, itemName, quantity } = req.body;
+		const user = req.user;
+
+		// Validate inputs
+		if (!category || !itemName || isNaN(quantity)) {
+			throw new Error("Invalid input. Please provide all required fields.");
+		}
+
+		// Find the selected category in the user's inventory
+		const categoryInventory = user.inventory[category];
+
+		// Check if the item already exists
+		const existingItem = categoryInventory.find(
+			(item) => item.name === itemName
+		);
+
+		if (existingItem) {
+			// Update quantity if the item exists
+			existingItem.quantity += parseInt(quantity);
+		} else {
+			// Add a new item if it doesn't exist
+			categoryInventory.push({ name: itemName, quantity: parseInt(quantity) });
+		}
+
+		await user.save();
+
+		res.redirect("/inventory");
+	} catch (error) {
+		console.error("Error adding item to inventory:", error.message);
+		res.redirect("/inventory");
+	}
+});
+
+// Handle form submission for updating an item in inventory
+app.post("/inventory/update", isAuthenticated, async (req, res) => {
+	try {
+		const { category, itemName, newQuantity } = req.body;
+		const user = req.user;
+
+		// Validate inputs
+		if (!category || !itemName || isNaN(newQuantity)) {
+			throw new Error("Invalid input. Please provide all required fields.");
+		}
+
+		// Find the selected category in the user's inventory
+		const categoryInventory = user.inventory[category];
+
+		// Check if the item exists
+		const existingItem = categoryInventory.find(
+			(item) => item.name === itemName
+		);
+
+		if (existingItem) {
+			// Update quantity if the item exists
+			existingItem.quantity = parseInt(newQuantity);
+			await user.save();
+		} else {
+			throw new Error("Item not found in inventory.");
+		}
+
+		res.redirect("/inventory");
+	} catch (error) {
+		console.error("Error updating item in inventory:", error.message);
+		res.redirect("/inventory");
+	}
 });
 
 const PORT = process.env.PORT || 3000;
