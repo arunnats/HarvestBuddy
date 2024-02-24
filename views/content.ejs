@@ -6,6 +6,7 @@
 		<title>Content</title>
 		<link rel="stylesheet" href="../css/loginsignupForm.css" />
 		<link rel="stylesheet" href="../css/button.css" />
+		<link rel="stylesheet" href="../css/content.css" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -22,9 +23,45 @@
 	</head>
 	<body>
 		<div class="main">
-			<button class="button" onclick="redirectTo('/')">Change Password</button>
-			<br />
-			<button class="button" onclick="redirectTo('/logout')">Logout</button>
+			<div class="info-divs">
+				<div class="card">
+					<div class="card-content-wrapper">
+						<div class="card-title">Welcome <%= name %></div>
+						<div class="card-price">
+							<span>Updates on <%= farmName %> at <%= location %></span>
+						</div>
+						<div class="card-subtitle">
+							<span>Elevation: <%= elevation %> m</span>
+							<br />
+							<span>Humidity: <%= humidity %>%</span>
+							<br />
+							<span>Rain: <%= rain %> mm</span>
+							<br />
+							<span>Wind Speed: <%= windSpeed %> km/h</span>
+							<br />
+							<span>UV Index Max: <%= uvIndexMax %></span>
+						</div>
+					</div>
+				</div>
+
+				<div class="card">
+					<div class="card-content-wrapper">
+						<div class="card-title">Manage Inventory</div>
+					</div>
+					<button class="card-btn">More info</button>
+				</div>
+
+				<div class="card">
+					<div class="card-content-wrapper">
+						<div class="card-title">Grow Crop</div>
+					</div>
+					<button class="card-btn">More info</button>
+				</div>
+			</div>
+			<div class="crop-info">
+				<div></div>
+				<div></div>
+			</div>
 		</div>
 		<script>
 			function redirectTo(url) {

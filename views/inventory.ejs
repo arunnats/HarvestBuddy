@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Content</title>
+		<link rel="stylesheet" href="../css/loginsignupForm.css" />
+		<link rel="stylesheet" href="../css/button.css" />
+		<link rel="stylesheet" href="../css/content.css" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			.main {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Inventory Management</h1>
+
+		<form action="/inventory/add" method="POST">
+			<label for="category">Select Category:</label>
+			<select name="category" id="category">
+				<option value="fuel">Fuel</option>
+				<option value="seeds">Seeds</option>
+				<option value="fertilizer">Fertilizer</option>
+				<option value="pesticide">Pesticide</option>
+				<option value="tool">Tool</option>
+			</select>
+
+			<label for="itemName">Select Item:</label>
+			<select name="itemName" id="itemName" onchange="updateQuantityInput()">
+				<!-- Dynamically populate options based on selected category using JavaScript -->
+			</select>
+
+			<label for="quantity">Quantity:</label>
+			<input type="number" name="quantity" id="quantity" required />
+
+			<button type="submit">Add Item</button>
+		</form>
+
+		<form action="/inventory/update" method="POST">
+			<label for="categoryUpdate">Select Category:</label>
+			<select name="category" id="categoryUpdate">
+				<option value="fuel">Fuel</option>
+				<option value="seeds">Seeds</option>
+				<option value="fertilizer">Fertilizer</option>
+				<option value="pesticide">Pesticide</option>
+				<option value="tool">Tool</option>
+			</select>
+
+			<label for="itemNameUpdate">Select Item:</label>
+			<select name="itemName" id="itemNameUpdate">
+				<!-- Dynamically populate options based on selected category using JavaScript -->
+			</select>
+
+			<label for="newQuantity">New Quantity:</label>
+			<input type="number" name="newQuantity" id="newQuantity" required />
+
+			<button type="submit">Update Item</button>
+		</form>
+
+		<script>
+			// Assume your categories and items are stored in a variable like this
+			const inventoryData = {
+				fuel: ["Petrol", "Diesel"],
+				seeds: ["Wheat", "Corn"],
+				fertilizer: ["Nitrogen", "Phosphorus"],
+				pesticide: ["Insecticide", "Herbicide"],
+				tool: ["Tractor", "Plough"],
+			};
+
+			// Function to update the item dropdown based on the selected category
+			function updateQuantityInput() {
+				const categorySelect = document.getElementById("category");
+				const itemNameSelect = document.getElementById("itemName");
+
+				// Clear previous options
+				itemNameSelect.innerHTML = "";
+
+				// Get the selected category
+				const selectedCategory = categorySelect.value;
+
+				// Populate options based on the selected category
+				inventoryData[selectedCategory].forEach((item) => {
+					const option = document.createElement("option");
+					option.value = item;
+					option.textContent = item;
+					itemNameSelect.appendChild(option);
+				});
+			}
+
+			// Trigger the function on page load
+			window.onload = updateQuantityInput;
+		</script>
+	</body>
+</html>
