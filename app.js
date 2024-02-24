@@ -380,5 +380,40 @@ app.get("/grow-crop", isAuthenticated, (req, res) => {
 	res.render("growCrop", { user });
 });
 
+app.post("/grow-crop", isAuthenticated, async (req, res) => {
+	try {
+		const { cropName, estimatedTimeOfGrowth, resourceUsageData } = req.body;
+		console.log("resourceUsageData:", resourceUsageData);
+		const startDate = new Date().toISOString();
+
+		const endDate = new Date();
+		endDate.setDate(endDate.getDate() + parseInt(estimatedTimeOfGrowth, 10));
+		const endDateISO = endDate.toISOString();
+
+		console.log("Collected Crop Data:", {
+			cropName,
+			startDate,
+			endDate: endDateISO,
+			estimatedTimeOfGrowth,
+			resourceUsage: resourceUsageData,
+		});
+
+		req.user.cropsGrown.push({
+			cropName,
+			startDate,
+			endDate: endDateISO,
+			estimatedTimeOfGrowth,
+			resourceUsage: resourceUsageData,
+		});
+
+		await req.user.save();
+
+		res.json({ message: "Crop grown successfully." });
+	} catch (error) {
+		console.error("Error processing /grow-crop POST request:", error);
+		res.status(500).json({ error: "Internal server error." });
+	}
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

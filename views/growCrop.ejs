@@ -24,7 +24,8 @@
 
 	<body>
 		<div class="main">
-			<form id="growCropForm" class="form" action="/grow-crop" method="post">
+			<!-- <form id="growCropForm" class="form" action="/grow-crop" method="post"> -->
+			<form id="growCropForm" class="form">
 				<div class="title noto-sans-title">
 					<span id="formTitle">Grow a Crop</span>
 				</div>
@@ -203,31 +204,70 @@
 				}
 			});
 
-			// Add logic to set start date and end date automatically on form submission
 			const growCropForm = document.getElementById("growCropForm");
-			growCropForm.addEventListener("submit", (event) => {
+
+			growCropForm.addEventListener("submit", async (event) => {
 				event.preventDefault();
-				const startDateInput = document.getElementById("startDate");
-				const endDateInput = document.getElementById("endDate");
 
-				// Set start date to the current date
-				const startDate = new Date();
-				startDateInput.value = startDate.toISOString();
-
-				// Set end date based on estimated time of growth
+				// Collect data from the form
+				const cropName = document.getElementById("cropName").value;
 				const estimatedTimeOfGrowthInput = document.getElementById(
 					"estimatedTimeOfGrowth"
 				);
-				const estimatedTimeOfGrowth = parseInt(
-					estimatedTimeOfGrowthInput.value,
-					10
-				);
-				const endDate = new Date(startDate);
-				endDate.setDate(startDate.getDate() + estimatedTimeOfGrowth);
-				endDateInput.value = endDate.toISOString();
+				let estimatedTimeOfGrowth = estimatedTimeOfGrowthInput.value;
 
-				// Submit the form
-				growCropForm.submit();
+				// Calculate the number of days from the current date to the given date
+				const currentDate = new Date();
+				const endDate = new Date(estimatedTimeOfGrowth);
+				const timeDifference = endDate.getTime() - currentDate.getTime();
+				const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+				// Log the calculated number of days
+				console.log("Number of days to growth:", daysDifference);
+				estimatedTimeOfGrowth = daysDifference;
+
+				// Collect resource usage data
+				const resourceUsageForms = document.querySelectorAll(
+					"#resourceUsageContainer > div"
+				);
+				const resourceUsageData = Array.from(resourceUsageForms).map((form) => {
+					const category = form.querySelector("#category").value;
+					const itemName = form.querySelector("#itemName").value;
+					const amountUsed = form.querySelector("#amountUsed").value;
+					const frequency = form.querySelector("#frequency").value;
+
+					return { category, itemName, amountUsed, frequency };
+				});
+
+				// Create the JSON object
+				const formData = {
+					cropName,
+					estimatedTimeOfGrowth,
+					resourceUsageData,
+				};
+
+				try {
+					// Make a POST request to the server
+					const response = await fetch("/grow-crop", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(formData),
+					});
+
+					if (!response.ok) {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+
+					// Optionally, handle the server response if needed
+					const responseData = await response.json();
+					console.log("Server response:", responseData);
+
+					// Redirect or perform other actions based on the server response
+				} catch (error) {
+					console.error("Error making POST request:", error);
+				}
 			});
 
 			const seedNameDropdown = document.getElementById("cropName"); // Correct variable name
