@@ -214,11 +214,8 @@ app.post("/inventory", async (req, res) => {
 	} = req.body;
 
 	const userEmail = req.user.email;
-	console.log(userEmail);
-	console.log(req.body);
 
 	try {
-		const userEmail = req.user.email;
 		const user = await User.findOne({ email: userEmail });
 
 		if (!user) {
@@ -243,6 +240,14 @@ app.post("/inventory", async (req, res) => {
 		// Helper function to update the quantity of an existing item
 		const updateItemQuantity = (item, quantityChange) => {
 			item.quantity = Math.max(0, item.quantity + quantityChange);
+
+			// If the quantity becomes 0, remove the item from the array
+			if (item.quantity === 0) {
+				const index = user.inventory[category].indexOf(item);
+				if (index !== -1) {
+					user.inventory[category].splice(index, 1);
+				}
+			}
 		};
 
 		// Logic based on the operation
@@ -321,6 +326,23 @@ app.get("/api/items", async (req, res) => {
 		res.json({ itemNames });
 	} catch (error) {
 		console.error("Error fetching item names:", error);
+		res.status(500).json({ error: "Internal server error." });
+	}
+});
+
+app.get("/api/seeds", async (req, res) => {
+	try {
+		// Retrieve all user data (assuming a small number of users)
+		const users = await User.find();
+
+		// Extract seed names from the "seeds" category across all users
+		const seedNames = users
+			.flatMap((user) => user.inventory.seeds)
+			.map((seed) => seed.name);
+
+		res.json({ seedNames });
+	} catch (error) {
+		console.error("Error fetching seed names:", error);
 		res.status(500).json({ error: "Internal server error." });
 	}
 });

@@ -39,21 +39,15 @@
 						class="input noto-sans-title"
 						required
 					>
-						<!-- Populate this dropdown with the seeds from the user's inventory -->
-						<!-- You can use JavaScript to fetch and populate this dynamically -->
-						<option value="seed1">Seed 1</option>
-						<option value="seed2">Seed 2</option>
-						<!-- Add more options as needed -->
+						<!-- JavaScript will populate this dropdown -->
 					</select>
 				</div>
 
 				<!-- Estimated Time of Growth -->
 				<div class="title noto-sans-title">
-					<label for="estimatedTimeOfGrowth"
-						>Estimated Time of Growth (in days):</label
-					>
+					<label for="estimatedTimeOfGrowth">Estimated Time of Growth:</label>
 					<input
-						type="number"
+						type="date"
 						id="estimatedTimeOfGrowth"
 						name="estimatedTimeOfGrowth"
 						class="input noto-sans-title"
@@ -74,6 +68,13 @@
 						class="button-confirm noto-sans-title"
 					>
 						Add Resource Usage
+					</button>
+					<button
+						type="button"
+						id="removeResourceUsage"
+						class="button-confirm noto-sans-title"
+					>
+						Remove Resource Usage
 					</button>
 				</div>
 
@@ -115,6 +116,22 @@
 				resourceUsageContainer.appendChild(resourceUsageForm);
 			});
 
+			const removeResourceUsageButton = document.getElementById(
+				"removeResourceUsage"
+			);
+
+			removeResourceUsageButton.addEventListener("click", () => {
+				const resourceUsageForms = resourceUsageContainer.children;
+
+				// Check if there's at least one form to remove
+				if (resourceUsageForms.length > 0) {
+					// Remove the last resource usage form
+					resourceUsageContainer.removeChild(
+						resourceUsageForms[resourceUsageForms.length - 1]
+					);
+				}
+			});
+
 			// Add logic to set start date and end date automatically on form submission
 			const growCropForm = document.getElementById("growCropForm");
 			growCropForm.addEventListener("submit", (event) => {
@@ -141,6 +158,41 @@
 				// Submit the form
 				growCropForm.submit();
 			});
+
+			const seedNameDropdown = document.getElementById("cropName"); // Correct variable name
+
+			async function fetchAndPopulateSeedNames() {
+				try {
+					// Adjust the endpoint based on your API
+					const response = await fetch("/api/seeds");
+
+					if (!response.ok) {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+
+					const data = await response.json();
+
+					// Log fetched data
+					console.log("Fetched Seed Data:", data);
+
+					// Clear existing options
+					seedNameDropdown.innerHTML = '<option value="">Select Seed</option>';
+
+					// Populate dropdown with fetched seed names
+					data.seedNames.forEach((seedName) => {
+						const option = document.createElement("option");
+						option.value = seedName;
+						option.textContent = seedName;
+						seedNameDropdown.appendChild(option);
+					});
+				} catch (error) {
+					console.error("Error fetching and populating seed names:", error);
+				}
+			}
+
+			// Call the function initially and whenever the category changes
+			fetchAndPopulateSeedNames();
+			categorySelector.addEventListener("change", fetchAndPopulateSeedNames);
 		</script>
 	</body>
 </html>
