@@ -147,7 +147,15 @@
 				Submit
 			</button>
 		</form>
-
+		<br />
+		<div class="form">
+			<h2>Current Resources</h2>
+			<% Object.keys(user.inventory).forEach(category => { %>
+			<h3><%= category.charAt(0).toUpperCase() + category.slice(1) %></h3>
+			<% user.inventory[category].forEach(item => { %>
+			<p>Name: <%= item.name %>, Quantity: <%= item.quantity %></p>
+			<% }); %> <% }); %>
+		</div>
 		<script>
 			const categorySelector = document.getElementById("categorySelector");
 			const addUpdateForm = document.getElementById("addUpdateForm");
@@ -159,6 +167,9 @@
 			const existingItemNameDropdown = document.querySelector(
 				'select[name="existingItemName"]'
 			);
+
+			//console.log("test");
+			//console.log("existingItemNameDropdown");
 
 			// Initially hide the input fields
 			newOperationFields.style.display = "none";
@@ -181,7 +192,9 @@
 				}
 
 				// Fetch and populate existing item names in the dropdown
-				await fetchAndPopulateItemNames();
+				if (!existingItemNameDropdown.options.length) {
+					await fetchAndPopulateItemNames();
+				}
 
 				// Collect form data
 				const formData = {
@@ -195,13 +208,14 @@
 					initialQuantity: document.querySelector(
 						'input[name="initialQuantity"]'
 					).value,
-					existingItemName: existingItemNameDropdown.selectedOptions[0].value, // Update this line
+					existingItemName: existingItemNameDropdown.selectedOptions[0].value,
 					modifyQuantity: document.querySelector('input[name="modifyQuantity"]')
 						.value,
 				};
 
-				// Log data before submission
-				console.log("Form Data Before Submission:", formData);
+				// Log the selected item name and other form data
+				console.log("Selected item name:", formData.existingItemName);
+				console.log("Form data:", formData);
 
 				// Add your logic to handle form submission via Fetch API
 				await submitForm(formData);
@@ -230,6 +244,7 @@
 
 					const responseData = await response.json();
 					console.log("Server Response:", responseData);
+					location.reload();
 				} catch (error) {
 					console.error("Error submitting form:", error);
 				}
