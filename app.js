@@ -191,9 +191,9 @@ app.post("/signup", async (req, res) => {
 app.post(
 	"/login",
 	passport.authenticate("local", {
-		successRedirect: "/content", // Redirect to the content page if authentication is successful
-		failureRedirect: "/login", // Redirect to the login page if authentication fails
-		failureFlash: true, // Enable flash messages for failure messages
+		successRedirect: "/content",
+		failureRedirect: "/login",
+		failureFlash: true,
 	})
 );
 
@@ -323,6 +323,12 @@ app.get("/api/items", async (req, res) => {
 		console.error("Error fetching item names:", error);
 		res.status(500).json({ error: "Internal server error." });
 	}
+});
+
+app.get("/grow-crop", isAuthenticated, (req, res) => {
+	const user = req.user;
+
+	res.render("growCrop", { user });
 });
 
 const PORT = process.env.PORT || 3000;

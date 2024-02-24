@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Content</title>
+		<link rel="stylesheet" href="../css/loginsignupForm.css" />
+		<link rel="stylesheet" href="../css/button.css" />
+		<link rel="stylesheet" href="../css/inventory.css" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			.main {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Include your existing navigation or header if needed -->
+
+		<div class="main">
+			<form id="growCropForm" class="form" action="/grow-crop" method="post">
+				<div class="title noto-sans-title">
+					<span id="formTitle">Grow a Crop</span>
+				</div>
+
+				<!-- Crop Name -->
+				<div class="title noto-sans-title">
+					<label for="cropName">Crop Name:</label>
+					<select
+						id="cropName"
+						name="cropName"
+						class="input noto-sans-title"
+						required
+					>
+						<!-- Populate this dropdown with the seeds from the user's inventory -->
+						<!-- You can use JavaScript to fetch and populate this dynamically -->
+						<option value="seed1">Seed 1</option>
+						<option value="seed2">Seed 2</option>
+						<!-- Add more options as needed -->
+					</select>
+				</div>
+
+				<!-- Estimated Time of Growth -->
+				<div class="title noto-sans-title">
+					<label for="estimatedTimeOfGrowth"
+						>Estimated Time of Growth (in days):</label
+					>
+					<input
+						type="number"
+						id="estimatedTimeOfGrowth"
+						name="estimatedTimeOfGrowth"
+						class="input noto-sans-title"
+						required
+					/>
+				</div>
+
+				<!-- Resource Usage -->
+				<div class="title noto-sans-title">
+					<label>Resource Usage:</label>
+					<!-- Dynamically add resource usage forms using JavaScript -->
+					<div id="resourceUsageContainer">
+						<!-- Resource Usage forms will be added here -->
+					</div>
+					<button
+						type="button"
+						id="addResourceUsage"
+						class="button-confirm noto-sans-title"
+					>
+						Add Resource Usage
+					</button>
+				</div>
+
+				<!-- Start Date (hidden, set automatically on form submission) -->
+				<input type="hidden" id="startDate" name="startDate" />
+
+				<!-- End Date (hidden, set automatically on form submission) -->
+				<input type="hidden" id="endDate" name="endDate" />
+
+				<!-- Submit Button -->
+				<button type="submit" class="button-confirm noto-sans-title">
+					Submit
+				</button>
+			</form>
+		</div>
+
+		<script>
+			// Include your existing JavaScript code here
+
+			// Add logic to dynamically add resource usage forms
+			const resourceUsageContainer = document.getElementById(
+				"resourceUsageContainer"
+			);
+			const addResourceUsageButton =
+				document.getElementById("addResourceUsage");
+
+			addResourceUsageButton.addEventListener("click", () => {
+				const resourceUsageForm = document.createElement("div");
+				resourceUsageForm.innerHTML = `
+              <label for="resourceName">Resource Name:</label>
+              <input type="text" name="resourceName" class="input noto-sans-title" required />
+
+              <label for="amountUsed">Amount Used:</label>
+              <input type="number" name="amountUsed" class="input noto-sans-title" required />
+
+              <label for="frequency">Frequency (in days):</label>
+              <input type="number" name="frequency" class="input noto-sans-title" required />
+          `;
+				resourceUsageContainer.appendChild(resourceUsageForm);
+			});
+
+			// Add logic to set start date and end date automatically on form submission
+			const growCropForm = document.getElementById("growCropForm");
+			growCropForm.addEventListener("submit", (event) => {
+				event.preventDefault();
+				const startDateInput = document.getElementById("startDate");
+				const endDateInput = document.getElementById("endDate");
+
+				// Set start date to the current date
+				const startDate = new Date();
+				startDateInput.value = startDate.toISOString();
+
+				// Set end date based on estimated time of growth
+				const estimatedTimeOfGrowthInput = document.getElementById(
+					"estimatedTimeOfGrowth"
+				);
+				const estimatedTimeOfGrowth = parseInt(
+					estimatedTimeOfGrowthInput.value,
+					10
+				);
+				const endDate = new Date(startDate);
+				endDate.setDate(startDate.getDate() + estimatedTimeOfGrowth);
+				endDateInput.value = endDate.toISOString();
+
+				// Submit the form
+				growCropForm.submit();
+			});
+		</script>
+	</body>
+</html>
