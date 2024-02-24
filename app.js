@@ -210,6 +210,7 @@ app.post("/inventory/add", isAuthenticated, async (req, res) => {
 			throw new Error("Invalid input. Please provide all required fields.");
 		}
 
+<<<<<<< Updated upstream
 		// Find the selected category in the user's inventory
 		const categoryInventory = user.inventory[category];
 
@@ -217,6 +218,20 @@ app.post("/inventory/add", isAuthenticated, async (req, res) => {
 		const existingItem = categoryInventory.find(
 			(item) => item.name === itemName
 		);
+=======
+		const findItemByName = (itemName) => {
+			return user.inventory[category].find((item) => item.name === itemName);
+		};
+
+		const createNewItem = () => {
+			const newItem = {
+				name: newItemName,
+				quantity: parseInt(initialQuantity) || 0,
+			};
+			user.inventory[category].push(newItem);
+			return newItem;
+		};
+>>>>>>> Stashed changes
 
 		if (existingItem) {
 			// Update quantity if the item exists
