@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Content</title>
+		<link rel="stylesheet" href="../css/loginsignupForm.css" />
+		<link rel="stylesheet" href="../css/button.css" />
+		<!-- <link rel="stylesheet" href="../css/content.css" /> -->
+		<link rel="stylesheet" href="../css/inventory.css" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			.main {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="radio-wrapper" id="categorySelector">
+			<div class="radio-option">
+				<input
+					class="radio-input"
+					type="radio"
+					name="category"
+					value="fuel"
+					checked
+				/>
+				<div class="radio-btn">
+					<span class="radio-span">Fuel</span>
+				</div>
+			</div>
+			<div class="radio-option">
+				<input class="radio-input" type="radio" name="category" value="seeds" />
+				<div class="radio-btn">
+					<span class="radio-span">Seeds</span>
+				</div>
+			</div>
+			<div class="radio-option">
+				<input
+					class="radio-input"
+					type="radio"
+					name="category"
+					value="fertilizer"
+				/>
+				<div class="radio-btn">
+					<span class="radio-span">Fertilizer</span>
+				</div>
+			</div>
+			<div class="radio-option">
+				<input
+					class="radio-input"
+					type="radio"
+					name="category"
+					value="pesticide"
+				/>
+				<div class="radio-btn">
+					<span class="radio-span">Pesticide</span>
+				</div>
+			</div>
+			<div class="radio-option">
+				<input class="radio-input" type="radio" name="category" value="tool" />
+				<div class="radio-btn">
+					<span class="radio-span">Tool</span>
+				</div>
+			</div>
+		</div>
+
+		<form id="addUpdateForm" class="form" action="/inventory" method="post">
+			<div class="title noto-sans-title">
+				<span id="formTitle">Create an Item</span>
+			</div>
+
+			<div class="title noto-sans-title">
+				<span>Operation:</span>
+				<div class="radio-wrapper">
+					<div class="radio-option">
+						<input
+							class="radio-input"
+							type="radio"
+							name="operation"
+							value="new"
+							checked=""
+						/>
+						<div class="radio-btn">
+							<span class="radio-span">New</span>
+						</div>
+					</div>
+					<div class="radio-option">
+						<input
+							class="radio-input"
+							type="radio"
+							name="operation"
+							value="add"
+						/>
+						<div class="radio-btn">
+							<span class="radio-span">Add</span>
+						</div>
+					</div>
+					<div class="radio-option">
+						<input
+							class="radio-input"
+							type="radio"
+							name="operation"
+							value="subtract"
+						/>
+						<div class="radio-btn">
+							<span class="radio-span">Subtract</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="newOperationFields">
+				<!-- Fields for the 'New' operation -->
+				<input
+					type="text"
+					placeholder="New Item Name"
+					name="newItemName"
+					class="input noto-sans-title"
+				/>
+				<input
+					type="text"
+					placeholder="Initial Quantity"
+					name="initialQuantity"
+					class="input noto-sans-title"
+				/>
+			</div>
+
+			<div id="addRemoveOperationFields">
+				<!-- Fields for the 'Add' and 'Subtract' operations -->
+				<select name="existingItemName" class="input noto-sans-title">
+					<!-- Populate this dropdown dynamically with existing item names -->
+					<option value="item1">Item 1</option>
+					<option value="item2">Item 2</option>
+					<option value="item3">Item 3</option>
+					<!-- Add more options as needed -->
+				</select>
+				<input
+					type="text"
+					placeholder="Quantity"
+					name="modifyQuantity"
+					class="input noto-sans-title"
+				/>
+			</div>
+
+			<button type="submit" class="button-confirm noto-sans-title">
+				Submit
+			</button>
+		</form>
+
+		<script>
+			const categorySelector = document.getElementById("categorySelector");
+			const addUpdateForm = document.getElementById("addUpdateForm");
+			const formTitle = document.getElementById("formTitle");
+			const newOperationFields = document.getElementById("newOperationFields");
+			const addRemoveOperationFields = document.getElementById(
+				"addRemoveOperationFields"
+			);
+
+			categorySelector.addEventListener("change", (event) => {
+				const selectedCategory = event.target.value;
+				formTitle.textContent = `Create ${
+					selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)
+				} Item`;
+			});
+
+			addUpdateForm.addEventListener("submit", (event) => {
+				event.preventDefault(); // Prevent the form from submitting for now
+				// Add your logic to handle form submission via AJAX or traditional form submission
+			});
+
+			const operationRadioButtons = document.querySelectorAll(
+				'input[name="operation"]'
+			);
+			operationRadioButtons.forEach((radio) => {
+				radio.addEventListener("change", () => {
+					if (radio.value === "new") {
+						newOperationFields.style.display = "block";
+						addRemoveOperationFields.style.display = "none";
+					} else {
+						newOperationFields.style.display = "none";
+						addRemoveOperationFields.style.display = "block";
+					}
+				});
+			});
+		</script>
+	</body>
+</html>
