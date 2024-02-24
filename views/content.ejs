@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Content</title>
+		<link rel="stylesheet" href="../css/loginsignupForm.css" />
+		<link rel="stylesheet" href="../css/button.css" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			.main {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="main">
+			<button class="button" onclick="redirectTo('/')">Change Password</button>
+			<br />
+			<button class="button" onclick="redirectTo('/logout')">Logout</button>
+		</div>
+		<script>
+			function redirectTo(url) {
+				window.location.href = url;
+			}
+		</script>
+	</body>
+</html>
