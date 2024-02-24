@@ -21,8 +21,35 @@
 	</head>
 	<body>
 		<div class="main">
-			<form class="form">
-				<button on class="button-confirm noto-sans-title">Let`s go →</button>
+			<form class="form" action="/signup" method="post">
+				<div class="title noto-sans-title">
+					Create an Account,<br /><span>get started today</span>
+				</div>
+				<input
+					type="text"
+					placeholder="Latitude"
+					name="latitude"
+					class="input noto-sans-title"
+					required
+				/>
+				<input
+					type="text"
+					placeholder="Longitude"
+					name="longitude"
+					class="input noto-sans-title"
+					required
+				/>
+				<input
+					type="text"
+					placeholder="Location Name"
+					name="locationName"
+					class="input noto-sans-title"
+					required
+				/>
+
+				<button type="submit" class="button-confirm noto-sans-title">
+					Let's go →
+				</button>
 			</form>
 		</div>
 	</body>
