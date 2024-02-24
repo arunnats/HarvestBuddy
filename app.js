@@ -10,39 +10,43 @@ const bcrypt = require("bcrypt");
 const app = express();
 
 mongoose.connect(
-	"mongodb+srv://login:DouglasAdams42@cluster0.bpavk21.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-	{
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	}
+	"mongodb+srv://login:DouglasAdams42@cluster0.bpavk21.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 );
 
 passport.use(
-	new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-		User.findOne({ email: email }, (err, user) => {
-			if (err) return done(err);
+	new LocalStrategy(
+		{ usernameField: "email" },
+		async (email, password, done) => {
+			try {
+				const user = await User.findOne({ email: email });
 
-			if (!user) {
-				return done(null, false, { message: "Incorrect email." });
-			}
+				if (!user) {
+					return done(null, false, { message: "Incorrect email." });
+				}
 
-			bcrypt.compare(password, user.password, (err, isMatch) => {
-				if (err) return done(err);
+				const isMatch = await bcrypt.compare(password, user.password);
 
 				if (isMatch) {
 					return done(null, user);
 				} else {
 					return done(null, false, { message: "Incorrect password." });
 				}
-			});
-		});
-	})
+			} catch (err) {
+				return done(err);
+			}
+		}
+	)
 );
 
 passport.serializeUser((user, done) => done(null, user.id));
-passport.deserializeUser((id, done) =>
-	User.findById(id, (err, user) => done(err, user))
-);
+passport.deserializeUser(async (id, done) => {
+	try {
+		const user = await User.findById(id);
+		done(null, user);
+	} catch (err) {
+		done(err);
+	}
+});
 
 app.use(
 	session({ secret: "your-secret-key", resave: true, saveUninitialized: true })
@@ -60,34 +64,6 @@ app.get("/", (req, res) => {
 		res.redirect("/content");
 	} else {
 		res.render("landing");
-	}
-});
-
-app.post(
-	"/login",
-	passport.authenticate("local", {
-		successRedirect: "/content",
-		failureRedirect: "/login",
-		failureFlash: true,
-	})
-);
-
-app.post("/signup", async (req, res) => {
-	const { name, email, password } = req.body;
-
-	try {
-		const hashedPassword = await bcrypt.hash(password, 10);
-		const newUser = new User({
-			name: name,
-			email: email,
-			password: hashedPassword,
-		});
-
-		await newUser.save();
-		res.redirect("/login");
-	} catch (error) {
-		console.error(error);
-		res.redirect("/signup");
 	}
 });
 
@@ -120,13 +96,47 @@ app.get("/signup", (req, res) => {
 	}
 });
 
-app.get("/change-password", (req, res) => {
-	if (req.isAuthenticated()) {
-		res.render("changepassword");
-	} else {
-		res.redirect("/content");
+app.post("/signup", async (req, res) => {
+	const { name, email, password, confirmPassword } = req.body;
+
+	// Check if passwords match
+	if (password !== confirmPassword) {
+		console.error("Passwords don't match");
+		return res.redirect("/signup"); // Passwords don't match, handle this as needed
+	}
+
+	try {
+		// Check if the email is already registered
+		const existingUser = await User.findOne({ email: email });
+		if (existingUser) {
+			console.error("User with this email already exists");
+			return res.redirect("/signup"); // User already exists, handle this as needed
+		}
+
+		const hashedPassword = await bcrypt.hash(password, 10);
+		const newUser = new User({
+			name: name,
+			email: email,
+			password: hashedPassword,
+		});
+
+		await newUser.save();
+		console.log("User registered successfully");
+		res.redirect("/login");
+	} catch (error) {
+		console.error("Error during signup:", error);
+		res.redirect("/signup");
 	}
 });
+
+app.post(
+	"/login",
+	passport.authenticate("local", {
+		successRedirect: "/content", // Redirect to the content page if authentication is successful
+		failureRedirect: "/login", // Redirect to the login page if authentication fails
+		failureFlash: true, // Enable flash messages for failure messages
+	})
+);
 
 app.get("/test", (req, res) => {
 	res.render("locationSelection");
