@@ -6,7 +6,8 @@
 		<title>Content</title>
 		<link rel="stylesheet" href="../css/loginsignupForm.css" />
 		<link rel="stylesheet" href="../css/button.css" />
-		<link rel="stylesheet" href="../css/content.css" />
+		<!-- <link rel="stylesheet" href="../css/content.css" /> -->
+		<link rel="stylesheet" href="../css/inventory.css" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -22,82 +23,173 @@
 		</style>
 	</head>
 	<body>
-		<h1>Inventory Management</h1>
+		<div class="radio-wrapper" id="categorySelector">
+			<div class="radio-option">
+				<input
+					class="radio-input"
+					type="radio"
+					name="category"
+					value="fuel"
+					checked
+				/>
+				<div class="radio-btn">
+					<span class="radio-span">Fuel</span>
+				</div>
+			</div>
+			<div class="radio-option">
+				<input class="radio-input" type="radio" name="category" value="seeds" />
+				<div class="radio-btn">
+					<span class="radio-span">Seeds</span>
+				</div>
+			</div>
+			<div class="radio-option">
+				<input
+					class="radio-input"
+					type="radio"
+					name="category"
+					value="fertilizer"
+				/>
+				<div class="radio-btn">
+					<span class="radio-span">Fertilizer</span>
+				</div>
+			</div>
+			<div class="radio-option">
+				<input
+					class="radio-input"
+					type="radio"
+					name="category"
+					value="pesticide"
+				/>
+				<div class="radio-btn">
+					<span class="radio-span">Pesticide</span>
+				</div>
+			</div>
+			<div class="radio-option">
+				<input class="radio-input" type="radio" name="category" value="tool" />
+				<div class="radio-btn">
+					<span class="radio-span">Tool</span>
+				</div>
+			</div>
+		</div>
 
-		<form action="/inventory/add" method="POST">
-			<label for="category">Select Category:</label>
-			<select name="category" id="category">
-				<option value="fuel">Fuel</option>
-				<option value="seeds">Seeds</option>
-				<option value="fertilizer">Fertilizer</option>
-				<option value="pesticide">Pesticide</option>
-				<option value="tool">Tool</option>
-			</select>
+		<form id="addUpdateForm" class="form" action="/inventory" method="post">
+			<div class="title noto-sans-title">
+				<span id="formTitle">Create an Item</span>
+			</div>
 
-			<label for="itemName">Select Item:</label>
-			<select name="itemName" id="itemName" onchange="updateQuantityInput()">
-				<!-- Dynamically populate options based on selected category using JavaScript -->
-			</select>
+			<div class="title noto-sans-title">
+				<span>Operation:</span>
+				<div class="radio-wrapper">
+					<div class="radio-option">
+						<input
+							class="radio-input"
+							type="radio"
+							name="operation"
+							value="new"
+							checked=""
+						/>
+						<div class="radio-btn">
+							<span class="radio-span">New</span>
+						</div>
+					</div>
+					<div class="radio-option">
+						<input
+							class="radio-input"
+							type="radio"
+							name="operation"
+							value="add"
+						/>
+						<div class="radio-btn">
+							<span class="radio-span">Add</span>
+						</div>
+					</div>
+					<div class="radio-option">
+						<input
+							class="radio-input"
+							type="radio"
+							name="operation"
+							value="subtract"
+						/>
+						<div class="radio-btn">
+							<span class="radio-span">Subtract</span>
+						</div>
+					</div>
+				</div>
+			</div>
 
-			<label for="quantity">Quantity:</label>
-			<input type="number" name="quantity" id="quantity" required />
+			<div id="newOperationFields">
+				<!-- Fields for the 'New' operation -->
+				<input
+					type="text"
+					placeholder="New Item Name"
+					name="newItemName"
+					class="input noto-sans-title"
+				/>
+				<input
+					type="text"
+					placeholder="Initial Quantity"
+					name="initialQuantity"
+					class="input noto-sans-title"
+				/>
+			</div>
 
-			<button type="submit">Add Item</button>
-		</form>
+			<div id="addRemoveOperationFields">
+				<!-- Fields for the 'Add' and 'Subtract' operations -->
+				<select name="existingItemName" class="input noto-sans-title">
+					<!-- Populate this dropdown dynamically with existing item names -->
+					<option value="item1">Item 1</option>
+					<option value="item2">Item 2</option>
+					<option value="item3">Item 3</option>
+					<!-- Add more options as needed -->
+				</select>
+				<input
+					type="text"
+					placeholder="Quantity"
+					name="modifyQuantity"
+					class="input noto-sans-title"
+				/>
+			</div>
 
-		<form action="/inventory/update" method="POST">
-			<label for="categoryUpdate">Select Category:</label>
-			<select name="category" id="categoryUpdate">
-				<option value="fuel">Fuel</option>
-				<option value="seeds">Seeds</option>
-				<option value="fertilizer">Fertilizer</option>
-				<option value="pesticide">Pesticide</option>
-				<option value="tool">Tool</option>
-			</select>
-
-			<label for="itemNameUpdate">Select Item:</label>
-			<select name="itemName" id="itemNameUpdate">
-				<!-- Dynamically populate options based on selected category using JavaScript -->
-			</select>
-
-			<label for="newQuantity">New Quantity:</label>
-			<input type="number" name="newQuantity" id="newQuantity" required />
-
-			<button type="submit">Update Item</button>
+			<button type="submit" class="button-confirm noto-sans-title">
+				Submit
+			</button>
 		</form>
 
 		<script>
-			// Assume your categories and items are stored in a variable like this
-			const inventoryData = {
-				fuel: ["Petrol", "Diesel"],
-				seeds: ["Wheat", "Corn"],
-				fertilizer: ["Nitrogen", "Phosphorus"],
-				pesticide: ["Insecticide", "Herbicide"],
-				tool: ["Tractor", "Plough"],
-			};
+			const categorySelector = document.getElementById("categorySelector");
+			const addUpdateForm = document.getElementById("addUpdateForm");
+			const formTitle = document.getElementById("formTitle");
+			const newOperationFields = document.getElementById("newOperationFields");
+			const addRemoveOperationFields = document.getElementById(
+				"addRemoveOperationFields"
+			);
 
-			// Function to update the item dropdown based on the selected category
-			function updateQuantityInput() {
-				const categorySelect = document.getElementById("category");
-				const itemNameSelect = document.getElementById("itemName");
+			categorySelector.addEventListener("change", (event) => {
+				const selectedCategory = event.target.value;
+				formTitle.textContent = `Create ${
+					selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)
+				} Item`;
+			});
 
-				// Clear previous options
-				itemNameSelect.innerHTML = "";
+			addUpdateForm.addEventListener("submit", (event) => {
+				event.preventDefault(); // Prevent the form from submitting for now
+				// Add your logic to handle form submission via AJAX or traditional form submission
+			});
 
-				// Get the selected category
-				const selectedCategory = categorySelect.value;
-
-				// Populate options based on the selected category
-				inventoryData[selectedCategory].forEach((item) => {
-					const option = document.createElement("option");
-					option.value = item;
-					option.textContent = item;
-					itemNameSelect.appendChild(option);
+			const operationRadioButtons = document.querySelectorAll(
+				'input[name="operation"]'
+			);
+			operationRadioButtons.forEach((radio) => {
+				radio.addEventListener("change", () => {
+					if (radio.value === "new") {
+						newOperationFields.style.display = "block";
+						addRemoveOperationFields.style.display = "none";
+					} else {
+						newOperationFields.style.display = "none";
+						addRemoveOperationFields.style.display = "block";
+					}
 				});
-			}
-
-			// Trigger the function on page load
-			window.onload = updateQuantityInput;
+			});
 		</script>
 	</body>
 </html>

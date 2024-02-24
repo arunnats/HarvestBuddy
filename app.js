@@ -193,5 +193,81 @@ app.post(
 	})
 );
 
+app.get("/inventory", isAuthenticated, (req, res) => {
+	const user = req.user;
+
+	res.render("inventory", { user });
+});
+
+// Handle form submission for adding an item to inventory
+app.post("/inventory/add", isAuthenticated, async (req, res) => {
+	try {
+		const { category, itemName, quantity } = req.body;
+		const user = req.user;
+
+		// Validate inputs
+		if (!category || !itemName || isNaN(quantity)) {
+			throw new Error("Invalid input. Please provide all required fields.");
+		}
+
+		// Find the selected category in the user's inventory
+		const categoryInventory = user.inventory[category];
+
+		// Check if the item already exists
+		const existingItem = categoryInventory.find(
+			(item) => item.name === itemName
+		);
+
+		if (existingItem) {
+			// Update quantity if the item exists
+			existingItem.quantity += parseInt(quantity);
+		} else {
+			// Add a new item if it doesn't exist
+			categoryInventory.push({ name: itemName, quantity: parseInt(quantity) });
+		}
+
+		await user.save();
+
+		res.redirect("/inventory");
+	} catch (error) {
+		console.error("Error adding item to inventory:", error.message);
+		res.redirect("/inventory");
+	}
+});
+
+// Handle form submission for updating an item in inventory
+app.post("/inventory/update", isAuthenticated, async (req, res) => {
+	try {
+		const { category, itemName, newQuantity } = req.body;
+		const user = req.user;
+
+		// Validate inputs
+		if (!category || !itemName || isNaN(newQuantity)) {
+			throw new Error("Invalid input. Please provide all required fields.");
+		}
+
+		// Find the selected category in the user's inventory
+		const categoryInventory = user.inventory[category];
+
+		// Check if the item exists
+		const existingItem = categoryInventory.find(
+			(item) => item.name === itemName
+		);
+
+		if (existingItem) {
+			// Update quantity if the item exists
+			existingItem.quantity = parseInt(newQuantity);
+			await user.save();
+		} else {
+			throw new Error("Item not found in inventory.");
+		}
+
+		res.redirect("/inventory");
+	} catch (error) {
+		console.error("Error updating item in inventory:", error.message);
+		res.redirect("/inventory");
+	}
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
