@@ -183,8 +183,8 @@
 				// Fetch and populate existing item names in the dropdown
 				await fetchAndPopulateItemNames();
 
-				// Log data before submission
-				console.log("Form Data Before Submission:", {
+				// Collect form data
+				const formData = {
 					category: categorySelector.querySelector(
 						'input[name="category"]:checked'
 					).value,
@@ -195,27 +195,46 @@
 					initialQuantity: document.querySelector(
 						'input[name="initialQuantity"]'
 					).value,
-					existingItemName: document.querySelector(
-						'select[name="existingItemName"]'
-					).value,
+					existingItemName: existingItemNameDropdown.selectedOptions[0].value, // Update this line
 					modifyQuantity: document.querySelector('input[name="modifyQuantity"]')
 						.value,
-				});
+				};
 
-				// Add your logic to handle form submission via AJAX or traditional form submission
-				submitForm();
+				// Log data before submission
+				console.log("Form Data Before Submission:", formData);
+
+				// Add your logic to handle form submission via Fetch API
+				await submitForm(formData);
 
 				// Clear the form fields after submission
 				addUpdateForm.reset();
 			});
 
-			// Function to handle form submission (replace with your logic)
-			function submitForm() {
-				// Add your logic to send the form data to the server
-				console.log("Form Submitted");
+			// Function to handle form submission via Fetch API
+			async function submitForm(formData) {
+				try {
+					// Log the JSON data before sending
+					console.log("JSON Data to be Sent:", JSON.stringify(formData));
+
+					const response = await fetch("/inventory", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(formData),
+					});
+
+					if (!response.ok) {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+
+					const responseData = await response.json();
+					console.log("Server Response:", responseData);
+				} catch (error) {
+					console.error("Error submitting form:", error);
+				}
 			}
 
-			// Function to validate the form (add your validation logic)
 			function validateForm() {
 				// Add your validation logic here
 				return true; // Return true if the form is valid, false otherwise

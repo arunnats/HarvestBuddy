@@ -10,8 +10,9 @@ const axios = require("axios");
 const bodyParser = require("body-parser");
 
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 mongoose.connect(
 	"mongodb+srv://login:DouglasAdams42@cluster0.bpavk21.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -212,10 +213,13 @@ app.post("/inventory", async (req, res) => {
 		modifyQuantity,
 	} = req.body;
 
+	const userEmail = req.user.email;
+	console.log(userEmail);
 	console.log(req.body);
 
 	try {
-		const user = await User.findById("userId");
+		const userEmail = req.user.email;
+		const user = await User.findOne({ email: userEmail });
 
 		if (!user) {
 			return res.status(404).json({ error: "User not found" });
