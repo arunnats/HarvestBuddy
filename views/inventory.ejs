@@ -198,12 +198,10 @@
 				Submit
 			</button>
 		</form>
-<<<<<<< Updated upstream
-
-=======
 		<br />
-	
-		<div class="form" >
+
+		<div class="form">
+
 			<h2>Current Resources</h2>
 			<% Object.keys(user.inventory).forEach(category => { %>
 			<h3><%= category.charAt(0).toUpperCase() + category.slice(1) %></h3>
@@ -211,6 +209,7 @@
 			<p>Name: <%= item.name %>, Quantity: <%= item.quantity %></p>
 			<% }); %> <% }); %>
 		</div>
+
 </div>
 
 <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 border-top" id = "footer">
@@ -227,7 +226,8 @@
 	  <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
 	</ul>
   </footer>
->>>>>>> Stashed changes
+
+
 		<script>
 
 			const darkModeCheckbox = document.getElementById('dark-mode-checkbox');
@@ -252,6 +252,9 @@
 				'select[name="existingItemName"]'
 			);
 
+			//console.log("test");
+			//console.log("existingItemNameDropdown");
+
 			// Initially hide the input fields
 			newOperationFields.style.display = "none";
 			addRemoveOperationFields.style.display = "none";
@@ -273,7 +276,9 @@
 				}
 
 				// Fetch and populate existing item names in the dropdown
-				await fetchAndPopulateItemNames();
+				if (!existingItemNameDropdown.options.length) {
+					await fetchAndPopulateItemNames();
+				}
 
 				// Collect form data
 				const formData = {
@@ -287,13 +292,14 @@
 					initialQuantity: document.querySelector(
 						'input[name="initialQuantity"]'
 					).value,
-					existingItemName: existingItemNameDropdown.selectedOptions[0].value, // Update this line
+					existingItemName: existingItemNameDropdown.selectedOptions[0].value,
 					modifyQuantity: document.querySelector('input[name="modifyQuantity"]')
 						.value,
 				};
 
-				// Log data before submission
-				console.log("Form Data Before Submission:", formData);
+				// Log the selected item name and other form data
+				console.log("Selected item name:", formData.existingItemName);
+				console.log("Form data:", formData);
 
 				// Add your logic to handle form submission via Fetch API
 				await submitForm(formData);
@@ -322,6 +328,7 @@
 
 					const responseData = await response.json();
 					console.log("Server Response:", responseData);
+					location.reload();
 				} catch (error) {
 					console.error("Error submitting form:", error);
 				}

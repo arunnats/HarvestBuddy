@@ -191,9 +191,9 @@ app.post("/signup", async (req, res) => {
 app.post(
 	"/login",
 	passport.authenticate("local", {
-		successRedirect: "/content", // Redirect to the content page if authentication is successful
-		failureRedirect: "/login", // Redirect to the login page if authentication fails
-		failureFlash: true, // Enable flash messages for failure messages
+		successRedirect: "/content",
+		failureRedirect: "/login",
+		failureFlash: true,
 	})
 );
 
@@ -214,11 +214,8 @@ app.post("/inventory", async (req, res) => {
 	} = req.body;
 
 	const userEmail = req.user.email;
-	console.log(userEmail);
-	console.log(req.body);
 
 	try {
-		const userEmail = req.user.email;
 		const user = await User.findOne({ email: userEmail });
 
 		if (!user) {
@@ -243,6 +240,14 @@ app.post("/inventory", async (req, res) => {
 		// Helper function to update the quantity of an existing item
 		const updateItemQuantity = (item, quantityChange) => {
 			item.quantity = Math.max(0, item.quantity + quantityChange);
+
+			// If the quantity becomes 0, remove the item from the array
+			if (item.quantity === 0) {
+				const index = user.inventory[category].indexOf(item);
+				if (index !== -1) {
+					user.inventory[category].splice(index, 1);
+				}
+			}
 		};
 
 		// Logic based on the operation
@@ -321,6 +326,91 @@ app.get("/api/items", async (req, res) => {
 		res.json({ itemNames });
 	} catch (error) {
 		console.error("Error fetching item names:", error);
+		res.status(500).json({ error: "Internal server error." });
+	}
+});
+
+app.get("/api/seeds", async (req, res) => {
+	try {
+		// Retrieve all user data (assuming a small number of users)
+		const users = await User.find();
+
+		// Extract seed names from the "seeds" category across all users
+		const seedNames = users
+			.flatMap((user) => user.inventory.seeds)
+			.map((seed) => seed.name);
+
+		res.json({ seedNames });
+	} catch (error) {
+		console.error("Error fetching seed names:", error);
+		res.status(500).json({ error: "Internal server error." });
+	}
+});
+
+app.get("/api/inventory/categories", async (req, res) => {
+	try {
+		const users = await User.find();
+
+		// Extract unique categories from all users
+		const categoriesSet = new Set();
+
+		users.forEach((user) => {
+			const inventory = user.inventory || {};
+
+			Object.keys(inventory).forEach((category) => {
+				// Exclude 'seeds' category
+				if (category !== "seeds") {
+					categoriesSet.add(category);
+				}
+			});
+		});
+		console.log(categoriesSet);
+		const categories = Array.from(categoriesSet);
+		console.log(categories);
+		res.json({ categories });
+	} catch (error) {
+		console.error("Error fetching inventory categories:", error);
+		res.status(500).json({ error: "Internal server error." });
+	}
+});
+
+app.get("/grow-crop", isAuthenticated, (req, res) => {
+	const user = req.user;
+
+	res.render("growCrop", { user });
+});
+
+app.post("/grow-crop", isAuthenticated, async (req, res) => {
+	try {
+		const { cropName, estimatedTimeOfGrowth, resourceUsageData } = req.body;
+		console.log("resourceUsageData:", resourceUsageData);
+		const startDate = new Date().toISOString();
+
+		const endDate = new Date();
+		endDate.setDate(endDate.getDate() + parseInt(estimatedTimeOfGrowth, 10));
+		const endDateISO = endDate.toISOString();
+
+		console.log("Collected Crop Data:", {
+			cropName,
+			startDate,
+			endDate: endDateISO,
+			estimatedTimeOfGrowth,
+			resourceUsage: resourceUsageData,
+		});
+
+		req.user.cropsGrown.push({
+			cropName,
+			startDate,
+			endDate: endDateISO,
+			estimatedTimeOfGrowth,
+			resourceUsage: resourceUsageData,
+		});
+
+		await req.user.save();
+
+		res.json({ message: "Crop grown successfully." });
+	} catch (error) {
+		console.error("Error processing /grow-crop POST request:", error);
 		res.status(500).json({ error: "Internal server error." });
 	}
 });

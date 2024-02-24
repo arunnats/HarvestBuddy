@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Content</title>
+		<link rel="stylesheet" href="../css/loginsignupForm.css" />
+		<link rel="stylesheet" href="../css/button.css" />
+		<link rel="stylesheet" href="../css/inventory.css" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			.main {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="main">
+			<!-- <form id="growCropForm" class="form" action="/grow-crop" method="post"> -->
+			<form id="growCropForm" class="form">
+				<div class="title noto-sans-title">
+					<span id="formTitle">Grow a Crop</span>
+				</div>
+
+				<!-- Crop Name -->
+				<div class="title noto-sans-title">
+					<label for="cropName">Crop Name:</label>
+					<select
+						id="cropName"
+						name="cropName"
+						class="input noto-sans-title"
+						required
+					>
+						<!-- JavaScript will populate this dropdown -->
+					</select>
+				</div>
+
+				<!-- Estimated Time of Growth -->
+				<div class="title noto-sans-title">
+					<label for="estimatedTimeOfGrowth">Estimated Time of Growth:</label>
+					<input
+						type="date"
+						id="estimatedTimeOfGrowth"
+						name="estimatedTimeOfGrowth"
+						class="input noto-sans-title"
+						required
+					/>
+				</div>
+
+				<!-- Resource Usage -->
+				<div class="title noto-sans-title">
+					<label>Resource Usage:</label>
+					<!-- Dynamically add resource usage forms using JavaScript -->
+					<div id="resourceUsageContainer">
+						<!-- Resource Usage forms will be added here -->
+					</div>
+					<button
+						type="button"
+						id="addResourceUsage"
+						class="button-confirm noto-sans-title"
+					>
+						Add Resource Usage
+					</button>
+					<button
+						type="button"
+						id="removeResourceUsage"
+						class="button-confirm noto-sans-title"
+					>
+						Remove Resource Usage
+					</button>
+				</div>
+
+				<!-- Start Date (hidden, set automatically on form submission) -->
+				<input type="hidden" id="startDate" name="startDate" />
+
+				<!-- End Date (hidden, set automatically on form submission) -->
+				<input type="hidden" id="endDate" name="endDate" />
+
+				<!-- Submit Button -->
+				<button type="submit" class="button-confirm noto-sans-title">
+					Submit
+				</button>
+			</form>
+		</div>
+
+		<script>
+			// Include your existing JavaScript code here
+
+			// Add logic to dynamically add resource usage forms
+			const resourceUsageContainer = document.getElementById(
+				"resourceUsageContainer"
+			);
+			const addResourceUsageButton =
+				document.getElementById("addResourceUsage");
+
+			addResourceUsageButton.addEventListener("click", async () => {
+				const resourceUsageForm = document.createElement("div");
+				resourceUsageForm.innerHTML = `
+                <label for="category">Category:</label>
+                <select id="category" name="category" class="input noto-sans-title" required>
+                    <option value="" selected>Select Category</option>
+                    <!-- Options will be dynamically populated -->
+                </select>
+
+                <label for="itemName">Item Name:</label>
+                <select id="itemName" name="itemName" class="input noto-sans-title" required disabled>
+                    <option value="">Select Item</option>
+                    <!-- Options will be dynamically populated based on the selected category -->
+                </select>
+                
+                <label for="amountUsed">Amount Used:</label>
+                <input type="number" id="amountUsed" name="amountUsed" class="input noto-sans-title" required>
+
+                <label for="frequency">Frequency of Usage (days):</label>
+                <input type="number" id="frequency" name="frequency" class="input noto-sans-title" required>
+            `;
+
+				resourceUsageContainer.appendChild(resourceUsageForm);
+
+				// Fetch and populate categories in the dropdown
+				const categoryDropdown = resourceUsageForm.querySelector("#category");
+				const itemNameDropdown = resourceUsageForm.querySelector("#itemName");
+
+				try {
+					const response = await fetch("/api/inventory/categories"); // Adjust the endpoint based on your API
+					if (!response.ok) {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+
+					const responseJson = await response.json();
+					const categories = responseJson.categories;
+					console.log(categories);
+					categories.forEach((category) => {
+						const option = document.createElement("option");
+						option.value = category;
+						option.textContent = capitalizeFirstLetter(category);
+						categoryDropdown.add(option);
+					});
+
+					// Event listener for category dropdown change
+					categoryDropdown.addEventListener("change", async () => {
+						const selectedCategory = categoryDropdown.value;
+
+						if (selectedCategory) {
+							itemNameDropdown.innerHTML =
+								'<option value="">Select Item</option>';
+							itemNameDropdown.disabled = true;
+
+							if (selectedCategory !== "seeds") {
+								try {
+									const itemsResponse = await fetch(
+										`/api/items?category=${selectedCategory}`
+									);
+									if (!itemsResponse.ok) {
+										throw new Error(
+											`HTTP error! Status: ${itemsResponse.status}`
+										);
+									}
+
+									const itemsTemp = await itemsResponse.json();
+									const items = itemsTemp.itemNames;
+									console.log(items);
+									// Populate the item name dropdown
+									items.forEach((item) => {
+										const option = document.createElement("option");
+										option.value = item;
+										option.textContent = item;
+										itemNameDropdown.appendChild(option);
+									});
+
+									itemNameDropdown.disabled = false;
+								} catch (error) {
+									console.error("Error fetching and populating items:", error);
+								}
+							}
+						}
+					});
+				} catch (error) {
+					console.error("Error fetching and populating categories:", error);
+				}
+			});
+
+			const removeResourceUsageButton = document.getElementById(
+				"removeResourceUsage"
+			);
+
+			removeResourceUsageButton.addEventListener("click", () => {
+				const resourceUsageForms = resourceUsageContainer.children;
+
+				// Check if there's at least one form to remove
+				if (resourceUsageForms.length > 0) {
+					// Remove the last resource usage form
+					resourceUsageContainer.removeChild(
+						resourceUsageForms[resourceUsageForms.length - 1]
+					);
+				}
+			});
+
+			const growCropForm = document.getElementById("growCropForm");
+
+			growCropForm.addEventListener("submit", async (event) => {
+				event.preventDefault();
+
+				// Collect data from the form
+				const cropName = document.getElementById("cropName").value;
+				const estimatedTimeOfGrowthInput = document.getElementById(
+					"estimatedTimeOfGrowth"
+				);
+				let estimatedTimeOfGrowth = estimatedTimeOfGrowthInput.value;
+
+				// Calculate the number of days from the current date to the given date
+				const currentDate = new Date();
+				const endDate = new Date(estimatedTimeOfGrowth);
+				const timeDifference = endDate.getTime() - currentDate.getTime();
+				const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+				// Log the calculated number of days
+				console.log("Number of days to growth:", daysDifference);
+				estimatedTimeOfGrowth = daysDifference;
+
+				// Collect resource usage data
+				const resourceUsageForms = document.querySelectorAll(
+					"#resourceUsageContainer > div"
+				);
+				const resourceUsageData = Array.from(resourceUsageForms).map((form) => {
+					const category = form.querySelector("#category").value;
+					const itemName = form.querySelector("#itemName").value;
+					const amountUsed = form.querySelector("#amountUsed").value;
+					const frequency = form.querySelector("#frequency").value;
+
+					return { category, itemName, amountUsed, frequency };
+				});
+
+				// Create the JSON object
+				const formData = {
+					cropName,
+					estimatedTimeOfGrowth,
+					resourceUsageData,
+				};
+
+				try {
+					// Make a POST request to the server
+					const response = await fetch("/grow-crop", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(formData),
+					});
+
+					if (!response.ok) {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+
+					// Optionally, handle the server response if needed
+					const responseData = await response.json();
+					console.log("Server response:", responseData);
+
+					// Redirect or perform other actions based on the server response
+				} catch (error) {
+					console.error("Error making POST request:", error);
+				}
+			});
+
+			const seedNameDropdown = document.getElementById("cropName"); // Correct variable name
+
+			async function fetchAndPopulateSeedNames() {
+				try {
+					// Adjust the endpoint based on your API
+					const response = await fetch("/api/seeds");
+
+					if (!response.ok) {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+
+					const data = await response.json();
+
+					// Log fetched data
+					console.log("Fetched Seed Data:", data);
+
+					// Clear existing options
+					seedNameDropdown.innerHTML = '<option value="">Select Seed</option>';
+
+					// Populate dropdown with fetched seed names
+					data.seedNames.forEach((seedName) => {
+						const option = document.createElement("option");
+						option.value = seedName;
+						option.textContent = seedName;
+						seedNameDropdown.appendChild(option);
+					});
+				} catch (error) {
+					console.error("Error fetching and populating seed names:", error);
+				}
+			}
+
+			// Call the function initially and whenever the category changes
+			fetchAndPopulateSeedNames();
+
+			// Function to capitalize the first letter of a string
+			function capitalizeFirstLetter(string) {
+				return string.charAt(0).toUpperCase() + string.slice(1);
+			}
+		</script>
+	</body>
+</html>
