@@ -1,6 +1,7 @@
 :root{
     --nav-color: #204e08;
     --font-color: #ecf1ea;
+    --font-color-sub : black ;
     --background-color : #f0f0f0 ;
     --button-shadow-color : black ;
 }
@@ -10,6 +11,7 @@
     --font-color: #020202;
     --background-color : #2f2e2e ;
     --button-shadow-color : #f0f0f0 ;
+    --font-color-sub : white ;
 }
 
 .noto-sans-reg {
