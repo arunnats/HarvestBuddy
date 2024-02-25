@@ -1,17 +1,17 @@
-:root{
-    --nav-color: #204e08;
-    --font-color: #ecf1ea;
-    --font-color-sub : black ;
-    --background-color : #f0f0f0 ;
-    --button-shadow-color : black ;
+:root {
+	--nav-color: #85a393;
+	--font-color: #ecf1ea;
+	--font-color-sub: black;
+	--background-color: #f0f0f0;
+	--button-shadow-color: black;
 }
 
-.dark-mode{
-    --nav-color: #e8f0e3;
-    --font-color: #020202;
-    --background-color : #2f2e2e ;
-    --button-shadow-color : #f0f0f0 ;
-    --font-color-sub : white ;
+.dark-mode {
+	--nav-color: #83850a;
+	--font-color: #020202;
+	--background-color: #2f2e2e;
+	--button-shadow-color: #f0f0f0;
+	--font-color-sub: white;
 }
 
 .noto-sans-reg {
@@ -31,7 +31,7 @@
 }
 
 .vt323-regular {
-    font-family: "VT323", monospace;
-    font-weight: 100;
-    font-style: normal;
+	font-family: "VT323", monospace;
+	font-weight: 100;
+	font-style: normal;
 }
