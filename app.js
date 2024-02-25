@@ -110,7 +110,8 @@ app.get("/content", async (req, res) => {
 					humidity: currentDetails.relative_humidity_2m,
 					rain: currentDetails.rain,
 					windSpeed: currentDetails.wind_speed_10m,
-					uvIndexMax: apiData.daily.uv_index_max[1], // Assuming you want the UV index max for the current day
+					uvIndexMax: apiData.daily.uv_index_max[1],
+					cropsGrown: req.user.cropsGrown,
 				});
 
 				console.log(apiData);

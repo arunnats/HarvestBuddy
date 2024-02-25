@@ -3,6 +3,100 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: center;
+	gap: 20px; /* Adjust the gap between cards if needed */
+}
+
+.card {
+	--main-focus: #2d8cf0;
+	--font-color: #323232;
+	--font-color-sub: #666;
+	--bg-color: #fff;
+	--main-color: #323232;
+	width: 350px;
+	height: 200px;
+	background: var(--bg-color);
+	border: 2px solid var(--main-color);
+	box-shadow: 4px 4px var(--main-color);
+	border-radius: 5px;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 20px; /* Adjust the margin between rows if needed */
+}
+
+.card-content-wrapper {
+	transform: translateY(10px);
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	transition: all 0.7s;
+}
+
+.card-title {
+	letter-spacing: 3px;
+	font-size: 20px;
+	font-weight: 700;
+	color: var(--font-color);
+}
+
+.card-price {
+	letter-spacing: 2px;
+	font-size: 20px;
+	color: var(--font-color);
+	font-weight: 700;
+}
+
+.card-price span {
+	font-size: 15px;
+	color: var(--font-color-sub);
+	font-weight: 500;
+}
+
+.card-subtitle {
+	letter-spacing: 2px;
+	font-size: 17px;
+	color: var(--main-focus);
+	font-weight: 500;
+}
+
+.card-benefits {
+	font-size: 15px;
+	padding-left: 20px;
+	color: var(--font-color);
+}
+
+.card-btn {
+	cursor: pointer;
+	width: 100px;
+	padding: 5px;
+	background: var(--main-focus);
+	border: none;
+	border-radius: 5px;
+	margin: 0 auto;
+	transform: translateY(30px);
+	color: var(--bg-color);
+	font-weight: 500;
+	font-size: 12px;
+	letter-spacing: 0.7px;
+	opacity: 0;
+	transition: all 0.7s;
+}
+
+.card:hover > .card-btn {
+	opacity: 1;
+	transform: translateY(17px);
+}
+
+.card-btn:hover {
+	font-weight: 700;
+	letter-spacing: 1px;
+}
+
+.info-divs {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
 }
 
 .card {
@@ -89,4 +183,22 @@
 .card-btn:hover {
 	font-weight: 700;
 	letter-spacing: 1px;
+}
+
+.crop-card {
+	--main-focus: #2d8cf0;
+	--font-color: #323232;
+	--font-color-sub: #666;
+	--bg-color: #fff;
+	--main-color: #323232;
+	width: 1050px;
+	height: 200px;
+	background: var(--bg-color);
+	border: 2px solid var(--main-color);
+	box-shadow: 4px 4px var(--main-color);
+	border-radius: 5px;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 20px; /* Adjust the margin between rows if needed */
 }
