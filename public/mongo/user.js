@@ -18,11 +18,21 @@ const cropGrownSchema = new mongoose.Schema({
 		},
 	},
 	estimatedTimeOfGrowth: Number,
+	daysPassed: Number, // New field to store the number of days passed since start
+	daysLeft: Number, // New field to store the number of days left until the end
 	resourceUsage: [
 		{
 			itemName: String,
 			amountUsed: Number,
 			frequency: Number,
+		},
+	],
+	resourceOverview: [
+		// New field to store the overview of resource usage
+		{
+			itemName: String,
+			itemsUsed: Number,
+			totalItemsNeeded: Number,
 		},
 	],
 });
