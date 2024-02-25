@@ -157,11 +157,25 @@
 }
 
 .crop-card h3 {
-	font-size: 24px;
-	color: var(--main-focus);
+	font-size: 45px;
+	font-family: "VT323", monospace;
+	font-weight: 100;
+	font-style: normal;
+	color: black ;
 }
 
 .crop-card p {
-	font-size: 16px;
+	font-family: "Noto Sans", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+	font-variation-settings: "wdth" 100;
 	color: var(--font-color);
+}
+
+.crop-info button{
+	font-size: 20px;
+	font-family: "VT323", monospace;
+	font-weight: 100;
+	font-style: normal;
 }

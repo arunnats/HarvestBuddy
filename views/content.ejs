@@ -60,6 +60,12 @@
 				right: 0 ;
 				z-index: 20 ;
 			  }
+      
+        @media screen and (max-width: 768px) {
+          .crop-card{
+            width: 100% ;
+          }
+        }
 		</style>
 	</head>
 <body>
@@ -98,11 +104,11 @@
       <div class="info-divs">
         <div class="card">
           <div class="card-content-wrapper">
-            <div class="card-title vt323-regular">Welcome <%= name %></div>
-            <div class="card-price">
+            <div class="card-title vt323-regular" style = "font-size: 40px ;">Welcome <%= name %></div>
+            <div class="card-price noto-sans-title">
               <span>Updates on <%= farmName %> at <%= location %></span>
             </div>
-            <div class="card-subtitle">
+            <div class="card-subtitle noto-sans-reg">
               <span>Elevation: <%= elevation %> m</span><br />
               <span>Humidity: <%= humidity %>%</span><br />
               <span>Rain: <%= rain %> mm</span><br />
@@ -114,16 +120,28 @@
 
         <div class="card">
           <div class="card-content-wrapper">
+<<<<<<< Updated upstream
             <div class="card-title vt323-regular" style = "font-size : 25px ;">Manage Inventory</div>
           </div>
           <button class="button vt323-regular" style = "width : 200px ; margin-top : 20px">More info</button>
+=======
+            <div class="card-title vt323-regular" style = "font-size :35px ;" >Manage Inventory</div>
+            <div class="card-title vt323-regular" style = "font-size : 25px ;" >Modify your current inventory!</div>
+          </div>
+          <button class="button vt323-regular" onclick="redirectTo('/inventory')" style = "width : 200px ; margin-top : 20px ; font-weight : 50 ;">Go to Inventory!</button>
+>>>>>>> Stashed changes
         </div>
 
         <div class="card">
           <div class="card-content-wrapper">
-            <div class="card-title vt323-regular" style = "font-size : 25px ;" >Grow Crop</div>
+            <div class="card-title vt323-regular" style = "font-size : 35px ;" >Grow Crop</div> 
+            <div class="card-title vt323-regular" style = "font-size : 25px ;" >Set your timeline here !</div>
           </div>
+<<<<<<< Updated upstream
           <button class="button vt323-regular" style = "width : 200px ; margin-top : 20px">More info</button>
+=======
+          <button class="button vt323-regular" onclick="redirectTo('/grow-crop')" style = "width : 200px ; margin-top : 20px ; font-weight : 50 ;">Grow Crops!</button>
+>>>>>>> Stashed changes
         </div>
       </div>
 
@@ -144,12 +162,27 @@
 									<p>Resource: <%= resource.itemName %> | Amount Used So Far: <%= resource.itemsUsed %> | Total Amount Required: <%= resource.totalItemsNeeded %></p>
 									<hr>
 								<% }) %>
+<<<<<<< Updated upstream
               <% } else { %>
                 <p>No resource overview available for this crop.</p>
               <% } %>
             </div>
           </div>
         <% }) %>
+=======
+							<% } else { %>
+								<p>No resource overview available for this crop.</p>
+							<% } %>
+				
+							<!-- Button for Get Crafting Recipes -->
+							<form action="/getrecommendations/<%= crop.cropName %>" method="get">
+								<button type="submit" class = "button" style = "width : 200px ;">Get Crafting Recipes</button>
+							</form>
+						</div>
+					</div>
+				<% }) %>
+				
+>>>>>>> Stashed changes
       </div>
     </div>
   </div>
