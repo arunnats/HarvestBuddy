@@ -35,6 +35,8 @@
 	border-radius: 5px;
 	padding: 10px;
 	display: flex;
+	align-items: center ;
+	justify-content: center ;
 	flex-direction: column;
 	margin: 10px;
 }
