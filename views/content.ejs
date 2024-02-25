@@ -85,45 +85,66 @@
 			  </div>
 			</div>
 		  </nav>
-		<div class="main">
-			<div class="info-divs">
-				<div class="card">
-					<div class="card-content-wrapper">
-						<div class="card-title">Welcome <%= name %></div>
-						<div class="card-price">
-							<span>Updates on <%= farmName %> at <%= location %></span>
-						</div>
-						<div class="card-subtitle">
-							<span>Elevation: <%= elevation %> m</span>
-							<br />
-							<span>Humidity: <%= humidity %>%</span>
-							<br />
-							<span>Rain: <%= rain %> mm</span>
-							<br />
-							<span>Wind Speed: <%= windSpeed %> km/h</span>
-							<br />
-							<span>UV Index Max: <%= uvIndexMax %></span>
+			<div class="main">
+				<div class="info-divs">
+					<div class="card">
+						<div class="card-content-wrapper">
+							<div class="card-title">Welcome <%= name %></div>
+							<div class="card-price">
+								<span>Updates on <%= farmName %> at <%= location %></span>
+							</div>
+							<div class="card-subtitle">
+								<span>Elevation: <%= elevation %> m</span><br />
+								<span>Humidity: <%= humidity %>%</span><br />
+								<span>Rain: <%= rain %> mm</span><br />
+								<span>Wind Speed: <%= windSpeed %> km/h</span><br />
+								<span>UV Index Max: <%= uvIndexMax %></span>
+							</div>
 						</div>
 					</div>
-				</div>
-
-				<div class="card">
-					<div class="card-content-wrapper">
-						<div class="card-title">Manage Inventory</div>
+		
+					<div class="card">
+						<div class="card-content-wrapper">
+							<div class="card-title">Manage Inventory</div>
+						</div>
+						<button class="card-btn">More info</button>
 					</div>
-					<button class="card-btn">More info</button>
-				</div>
-
-				<div class="card">
-					<div class="card-content-wrapper">
-						<div class="card-title">Grow Crop</div>
+		
+					<div class="card">
+						<div class="card-content-wrapper">
+							<div class="card-title">Grow Crop</div>
+						</div>
+						<button class="card-btn">More info</button>
 					</div>
-					<button class="card-btn">More info</button>
+				</div>
+				
+				<br>
+				<div class="crop-info">
+					<% cropsGrown.forEach(crop => { %>
+            <div class="crop-card">
+                <div class="crop-card-content-wrapper">
+                    <div class="crop-card-title">Crop: <%= crop.cropName %></div>
+                    <p>Days Passed: <%= (function(startDate) {
+											const startTimestamp = new Date(startDate).getTime();
+											const currentTimestamp = new Date().getTime();
+											const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+											const daysPassed = Math.floor((currentTimestamp - startTimestamp) / millisecondsPerDay);
+											return daysPassed;
+									})(crop.startDate) %></p>
+									<p>Days Remaining: <%= (function(endDate) {
+										const endTimestamp = new Date(endDate).getTime();
+										const currentTimestamp = new Date().getTime();
+										const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+										const daysRemaining = Math.max(0, Math.ceil((endTimestamp - currentTimestamp) / millisecondsPerDay));
+										return daysRemaining;
+								})(crop.endDate) %></p>
+
+                    <button class="crop-card-btn" onclick="recommendedAction('<%= crop.cropName %>')">Recommended Action</button>
+                </div>
+            </div>
+        <% }) %>
 				</div>
 			</div>
-			<div class="crop-info">
-				<div></div>
-				<div></div>
 			</div>
 		</div>
 
@@ -141,21 +162,21 @@
 			  <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
 			</ul>
 		  </footer>
-		<script>
-			function redirectTo(url) {
-				window.location.href = url;
+			<script>
+				function redirectTo(url) {
+					window.location.href = url;
 			}
-
-			const darkModeCheckbox = document.getElementById('dark-mode-checkbox');
-
-    	darkModeCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-        
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-        }
-    	});
+		
+				const darkModeCheckbox = document.getElementById('dark-mode-checkbox');
+		
+				darkModeCheckbox.addEventListener('change', function () {
+						if (this.checked) {
+								document.body.classList.add('dark-mode');
+						} else {
+								document.body.classList.remove('dark-mode');
+						}
+				});
 		</script>
+
 	</body>
 </html>
