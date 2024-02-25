@@ -403,7 +403,7 @@
 					const responseData = await response.json();
 					console.log("Server response:", responseData);
 
-					// Redirect or perform other actions based on the server response
+					window.location.href = "/content";
 				} catch (error) {
 					console.error("Error making POST request:", error);
 				}

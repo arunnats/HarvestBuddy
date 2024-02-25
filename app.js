@@ -8,15 +8,27 @@ const path = require("path");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 const bodyParser = require("body-parser");
+const twilio = require("twilio");
+const { OpenAI } = require("openai");
+const config = require("./public/config.json");
+
+const openai_key = config.openai_key;
+// const openai = new OpenAI({
+// 	apiKey: openai_key,
+// });
+const openai = new OpenAI({
+	apiKey: "
+
+const twilioClient = twilio(config.twilio.apiSid, config.twilio.authToken, {
+	accountSid: config.twilio.accountSid,
+});
 
 const app = express();
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-mongoose.connect(
-	"mongodb+srv://login:DouglasAdams42@cluster0.bpavk21.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-);
+mongoose.connect(config.mongodb.connectionString);
 
 passport.use(
 	new LocalStrategy(
@@ -72,51 +84,9 @@ function isAuthenticated(req, res, next) {
 	}
 }
 
-const updateCropInformation = async () => {
-	try {
-		console.log("Start Updation process");
-		const users = await User.find({ "cropsGrown.0": { $exists: true } }); // Find users with non-empty cropsGrown
-
-		users.forEach(async (user) => {
-			user.cropsGrown.forEach((crop) => {
-				// Calculate daysPassed and daysLeft
-				const currentDate = new Date();
-				const startDate = new Date(crop.startDate);
-				const endDate = new Date(crop.endDate);
-
-				crop.daysPassed = Math.floor(
-					(currentDate - startDate) / (24 * 60 * 60 * 1000)
-				);
-				crop.daysLeft = Math.floor(
-					(endDate - currentDate) / (24 * 60 * 60 * 1000)
-				);
-
-				// Update resourceOverview for each resource in crop
-				crop.resourceOverview = crop.resourceUsage.map((resource) => {
-					const { itemName, amountUsed, frequency } = resource;
-					const amountUsedNow = (crop.daysPassed % frequency) * amountUsed;
-
-					return {
-						itemName,
-						itemsUsed: amountUsedNow,
-						totalItemsNeeded: amountUsed * frequency,
-					};
-				});
-			});
-
-			// Save the updated user to the database
-			await user.save();
-		});
-
-		console.log("Crop information updated successfully for all users.");
-	} catch (error) {
-		console.error("Error updating crop information:", error);
-	}
-};
-
-updateCropInformation();
+User.updateCropInformation();
 const updateInterval = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
-setInterval(updateCropInformation, updateInterval);
+setInterval(User.updateCropInformation, updateInterval);
 
 app.get("/", (req, res) => {
 	if (req.isAuthenticated()) {
@@ -196,6 +166,7 @@ app.post("/signup", async (req, res) => {
 		name,
 		email,
 		password,
+		phone,
 		confirmPassword,
 		latitude,
 		longitude,
@@ -219,6 +190,7 @@ app.post("/signup", async (req, res) => {
 			name: name,
 			email: email,
 			password: hashedPassword,
+			phone: phone,
 			farm: {
 				name: locationName,
 				latitude: parseFloat(latitude),
@@ -298,6 +270,23 @@ app.post("/inventory", async (req, res) => {
 			}
 		};
 
+		// Function to send SMS alerts
+		const sendSMSAlert = async (phoneNumber, message) => {
+			try {
+				console.log("Sending SMS alert to:", phoneNumber);
+				console.log("SMS message:", message);
+
+				await twilioClient.messages.create({
+					body: message,
+					to: phoneNumber,
+					from: "+1 386 310 3856",
+				});
+				console.log("SMS alert sent successfully.");
+			} catch (error) {
+				console.error("Error sending SMS alert:", error);
+			}
+		};
+
 		// Logic based on the operation
 		if (operation === "new") {
 			// Check if an item with the same name already exists
@@ -309,7 +298,12 @@ app.post("/inventory", async (req, res) => {
 			} else {
 				// Create a new item
 				const newItem = createNewItem();
-				await user.save(); // Save the updated user to the database
+				await user.save();
+
+				// Send SMS alert for creating a new inventory item
+				const message = `Alert: You added a new inventory item (${newItem.name}) with ${newItem.quantity} units.`;
+				await sendSMSAlert(user.phone, message);
+
 				return res.json({ message: "New item created successfully.", newItem });
 			}
 		} else if (operation === "add" || operation === "subtract") {
@@ -328,7 +322,12 @@ app.post("/inventory", async (req, res) => {
 					const quantityChange = parseInt(modifyQuantity) || 0;
 					if (operation === "add") {
 						updateItemQuantity(existingItem, quantityChange);
-						await user.save(); // Save the updated user to the database
+						await user.save();
+
+						// Send SMS alert for adding to inventory
+						const message = `Alert: You added ${quantityChange} units of ${existingItem.name} to your inventory. Total: ${existingItem.quantity} units.`;
+						await sendSMSAlert(user.phone, message);
+
 						return res.json({
 							message: "Quantity added successfully.",
 							updatedItem: existingItem,
@@ -336,7 +335,12 @@ app.post("/inventory", async (req, res) => {
 					} else {
 						// Subtract operation
 						updateItemQuantity(existingItem, -quantityChange);
-						await user.save(); // Save the updated user to the database
+						await user.save();
+
+						// Send SMS alert for subtracting from inventory
+						const message = `Alert: You subtracted ${quantityChange} units of ${existingItem.name} from your inventory. Total: ${existingItem.quantity} units.`;
+						await sendSMSAlert(user.phone, message);
+
 						return res.json({
 							message: "Quantity subtracted successfully.",
 							updatedItem: existingItem,
@@ -414,6 +418,22 @@ app.post("/grow-crop", isAuthenticated, async (req, res) => {
 		endDate.setDate(endDate.getDate() + parseInt(estimatedTimeOfGrowth, 10));
 		const endDateISO = endDate.toISOString();
 
+		const sendSMSAlert = async (phoneNumber, message) => {
+			try {
+				console.log("Sending SMS alert to:", phoneNumber);
+				console.log("SMS message:", message);
+
+				await twilioClient.messages.create({
+					body: message,
+					to: phoneNumber,
+					from: "+1 386 310 3856",
+				});
+				console.log("SMS alert sent successfully.");
+			} catch (error) {
+				console.error("Error sending SMS alert:", error);
+			}
+		};
+
 		console.log("Collected Crop Data:", {
 			cropName,
 			startDate,
@@ -432,11 +452,82 @@ app.post("/grow-crop", isAuthenticated, async (req, res) => {
 
 		await req.user.save();
 
-		res.json({ message: "Crop grown successfully." });
+		// Prepare detailed message
+		const message = `Crop grown successfully!
+    Crop Name: ${cropName}
+    Start Date: ${startDate}
+    End Date: ${endDateISO}
+    Estimated Time of Growth: ${estimatedTimeOfGrowth} days
+    Resource Usage:
+    ${resourceUsageData
+			.map(
+				(resource) =>
+					`${resource.itemName} - Amount Used: ${resource.amountUsed}, Frequency: ${resource.frequency} days`
+			)
+			.join("\n")}`;
+
+		// Send SMS
+		await sendSMSAlert(req.user.phone, message);
+
+		res.json({ message: "Crop grown successfully. SMS sent." });
 	} catch (error) {
 		console.error("Error processing /grow-crop POST request:", error);
 		res.status(500).json({ error: "Internal server error." });
 	}
+});
+
+app.get(
+	"/getrecommendations/:nameofthecrop",
+	isAuthenticated,
+	async (req, res) => {
+		try {
+			// Access the currently logged-in user's information
+			const { latitude, longitude } = req.user.farm;
+			const cropName = req.params.nameofthecrop;
+
+			// Create a prompt for GPT-4.0 based on coordinates and crop
+			const prompt = `Provide recommendations for growing ${cropName} at coordinates ${latitude}, ${longitude}. Include pros and cons of cultivating this crop in this location, potential markets/ports for selling and exporting, and nearby industries that utilize this crop. Please present the information in a concise format with solid points. Do not use any formatting, present it in a way where i can i add a break statement after every full stop so it looks clean and neat. Make long resourcedul informative sentenses and the response needs to make the msot of te coordinates keeping in mind this is for a farmer for trading`;
+
+			console.log("Prompt: " + prompt);
+			console.log("Sending request to GPT");
+
+			const response = await openai.chat.completions.create({
+				model: "gpt-3.5-turbo",
+				messages: [
+					{
+						role: "system",
+						content:
+							"You are an agriculture information assistant. You will provide detailed information about the cultivation of crops, including recommendations, pros and cons, market/ports, and nearby industries. Your output should be informative and concise, structured in a way that addresses each aspect separately.",
+					},
+					{
+						role: "user",
+						content: prompt,
+					},
+				],
+			});
+
+			// Extract the generated response
+			const generatedResponse = response.choices[0]?.message?.content;
+
+			console.log(generatedResponse);
+
+			// Respond with the generated information
+			res.render("recpage", {
+				user: req.user,
+				cropName: req.params.nameofthecrop,
+				generatedResponse,
+			});
+		} catch (error) {
+			console.error("Error generating agricultural recommendations:", error);
+			res.status(500).json({ error: "Internal server error." });
+		}
+	}
+);
+
+app.get("/getrecommendations", isAuthenticated, (req, res) => {
+	const user = req.user;
+
+	res.render("recpage", { user });
 });
 
 const PORT = process.env.PORT || 3000;

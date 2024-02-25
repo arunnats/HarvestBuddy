@@ -1,3 +1,11 @@
+body {
+	margin: 0;
+	padding: 0;
+	background: url("https://i.pinimg.com/originals/a2/a8/b4/a2a8b4ca1833cfec5a7b9a7b1ec1826a.jpg")
+		no-repeat center center fixed;
+	background-size: cover;
+}
+
 .container {
 	display: flex;
 	flex-direction: column;
@@ -18,12 +26,8 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: center;
-<<<<<<< Updated upstream
-	gap: 40px; /* Adjust the gap between cards if needed */
-=======
 	gap: 50px; /* Adjust the gap between cards if needed */
 	margin-top: 40px;
->>>>>>> Stashed changes
 }
 
 .card {
@@ -33,36 +37,34 @@
 	--bg-color: #fff;
 	--main-color: #323232;
 	width: 300px;
-	height: auto;
-	background: var(--bg-color);
 	border: 2px solid var(--main-color);
 	box-shadow: 4px 4px var(--main-color);
 	border-radius: 5px;
 	padding: 30px;
 	display: flex;
-	align-items: center ;
-	justify-content: center ;
+	align-items: center;
+	justify-content: center;
 	flex-direction: column;
 	margin: 10px;
 }
 
 .crop-card {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px; /* Add some spacing between each crop card */
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 20px; /* Add some spacing between each crop card */
 }
 
 .crop-card-content {
-    display: flex;
-    flex-direction: column;
-    padding: 20px; /* Add padding for better readability */
+	display: flex;
+	flex-direction: column;
+	padding: 20px; /* Add padding for better readability */
 }
 
 @media only screen and (max-width: 1000px) {
-    .crop-card,
-    .crop-card-content {
-        min-width: auto; /* Remove the minimum width */
-    }
+	.crop-card,
+	.crop-card-content {
+		min-width: auto; /* Remove the minimum width */
+	}
 }
 
 .card-content-wrapper {
@@ -138,7 +140,7 @@
 	--font-color-sub: #666;
 	--bg-color: #fff;
 	--main-color: #323232;
-	width: 1050px;
+	width: 800px;
 	height: auto;
 	background: var(--bg-color);
 	border: 2px solid var(--main-color);

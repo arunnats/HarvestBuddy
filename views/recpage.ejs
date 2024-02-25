@@ -3,14 +3,13 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Login</title>
-
+		<title>Content</title>
 		<!-- css style sheets -->
 		<link rel="stylesheet" href="../css/loginsignupForm.css" />
 		<link rel="stylesheet" href="../css/navbar.css" />
 		<link rel="stylesheet" href="../css/styles.css" />
 		<link rel="stylesheet" href="../css/button.css" />
-
+		<link rel="stylesheet" href="../css/content.css" />
 		<!--google fonds -->
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -42,24 +41,9 @@
 			body {
 				margin: 0;
 				padding: 0;
-				background: url("https://i.pinimg.com/originals/a9/2e/7b/a92e7b6aa6548eff15ffd5d947fac101.jpg")
+				background: url("https://i.pinimg.com/originals/14/ad/12/14ad123dadfabff2dc9d3678bfd1288f.png")
 					no-repeat center center fixed;
 				background-size: cover;
-			}
-
-			.main {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				flex-wrap: wrap;
-				position: relative;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100vh;
-				overflow: hidden;
-				/* Adjust opacity as needed */
-				flex-direction: column;
 			}
 
 			.navbar.navbar-expand-lg.border-bottom.border-body {
@@ -69,8 +53,62 @@
 				right: 0;
 				z-index: 20;
 			}
+
+			.theme-container {
+				position: relative; /* Position relative to the nearest positioned ancestor */
+				top: 30px; /* Adjust as needed */
+				right: 30px; /* Adjust as needed */
+				padding: 10px; /* Example padding */
+				display: inline-block;
+			}
+
+			.main {
+				padding-top: 150px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-wrap: wrap;
+				position: fixed; /* or absolute */
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				overflow: auto;
+				background-color: var(--background-color);
+				background-color: rgba(255, 255, 255, 0.3);
+			}
+
+			.resource-usage-form {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-top: 10px;
+				flex-direction: column;
+			}
+
+			.form{
+				width: 600px;
+				margin-bottom: 20px;
+			}
+
+			#resourceUsageContainer {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 20px;
+			}
+
+			@media (max-width: 768px) {
+				#resourceUsageContainer {
+					grid-template-columns: 1fr;
+				}
+
+				.form{
+					width: 400px;
+				}
+			}
 		</style>
 	</head>
+
 	<body>
 		<nav
 			class="navbar navbar-expand-lg border-bottom border-body"
@@ -78,7 +116,7 @@
 		>
 			<div class="container-fluid">
 				<a class="navbar-brand" href="/content">
-					<img src="/images/logo-nobg.png" alt="Logo" height="30" />
+					<img src="/images/logo-nobg	.png" alt="Logo" height="30" />
 				</a>
 				<button
 					class="navbar-toggler"
@@ -92,26 +130,29 @@
 					<span class="navbar-toggler-icon" id="drop_down"></span>
 				</button>
 				<div class="collapse navbar-collapse" id="navbarColor01">
-					<ul class="navbar-nav ms-auto"></ul>
+					<ul class="navbar-nav ms-auto">
+						<!-- Only "Home" link remains -->
+						<li class="nav-item">
+							<a class="nav-link" href="/content">Home</a>
+						</li>
+					</ul>
 					<div class="theme_container">
 						<label class="switch" id="dark-mode">
-							<span class="sun">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+							<span class="sun"
+								><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 									<g fill="#ffd43b">
 										<circle r="5" cy="12" cx="12"></circle>
 										<path
 											d="m21 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm-17 0h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm13.66-5.66a1 1 0 0 1 -.66-.29 1 1 0 0 1 0-1.41l.71-.71a1 1 0 1 1 1.41 1.41l-.71.71a1 1 0 0 1 -.75.29zm-12.02 12.02a1 1 0 0 1 -.71-.29 1 1 0 0 1 0-1.41l.71-.66a1 1 0 0 1 1.41 1.41l-.71.71a1 1 0 0 1 -.7.24zm6.36-14.36a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm0 17a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm-5.66-14.66a1 1 0 0 1 -.7-.29l-.71-.71a1 1 0 0 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.29zm12.02 12.02a1 1 0 0 1 -.7-.29l-.66-.71a1 1 0 0 1 1.36-1.36l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.24z"
 										></path>
-									</g>
-								</svg>
-							</span>
-							<span class="moon">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+									</g></svg
+							></span>
+							<span class="moon"
+								><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
 									<path
 										d="m223.5 32c-123.5 0-223.5 100.3-223.5 224s100 224 223.5 224c60.6 0 115.5-24.2 155.8-63.4 5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6-96.9 0-175.5-78.8-175.5-176 0-65.8 36-123.1 89.3-153.3 6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
-									></path>
-								</svg>
-							</span>
+									></path></svg
+							></span>
 							<input type="checkbox" class="input" id="dark-mode-checkbox" />
 							<span class="slider"></span>
 						</label>
@@ -121,80 +162,14 @@
 		</nav>
 
 		<div class="main">
-			<form class="form" action="/login" method="post">
+			<form id="growCropForm" class="form">
 				<div class="title noto-sans-title">
-					Welcome,<br /><span>log in to continue</span>
+					Recommendations for growing <%= cropName %> at your farm
 				</div>
-				<input
-					type="email"
-					placeholder="Email"
-					name="email"
-					class="input noto-sans-title"
-				/>
-				<input
-					type="password"
-					placeholder="Password"
-					name="password"
-					class="input"
-				/>
-
-				<button
-					type="submit"
-					class="button-confirm noto-sans-title vt323-regular"
-				>
-					Let's go →
-				</button>
+				<div class="generated-response">
+					<%= generatedResponse %>
+			</div>
 			</form>
 		</div>
-
-		<!-- <footer
-			class="d-flex flex-wrap justify-content-between align-items-center py-3 border-top"
-			id="footer"
-		>
-			<div class="col-md-4 d-flex align-items-center">
-				<a
-					href="/"
-					class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1"
-				>
-					<svg class="bi" width="30" height="24">
-						<use xlink:href="#bootstrap"></use>
-					</svg>
-				</a>
-				<span class="mb-3 mb-md-0" id="footer_text">© 2022 Company, Inc</span>
-			</div>
-
-			<ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-				<li class="ms-3">
-					<a class="text-muted" href="#"
-						><svg class="bi" width="24" height="24">
-							<use xlink:href="#twitter"></use></svg
-					></a>
-				</li>
-				<li class="ms-3">
-					<a class="text-muted" href="#"
-						><svg class="bi" width="24" height="24">
-							<use xlink:href="#instagram"></use></svg
-					></a>
-				</li>
-				<li class="ms-3">
-					<a class="text-muted" href="#"
-						><svg class="bi" width="24" height="24">
-							<use xlink:href="#facebook"></use></svg
-					></a>
-				</li>
-			</ul>
-		</footer> -->
-
-		<script>
-			const darkModeCheckbox = document.getElementById("dark-mode-checkbox");
-
-			darkModeCheckbox.addEventListener("change", function () {
-				if (this.checked) {
-					document.body.classList.add("dark-mode");
-				} else {
-					document.body.classList.remove("dark-mode");
-				}
-			});
-		</script>
 	</body>
 </html>
