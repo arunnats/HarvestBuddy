@@ -82,8 +82,13 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				margin-top: 20px;
+				margin-top: 10px;
 				flex-direction: column;
+			}
+
+			.form{
+				width: 600px;
+				margin-bottom: 20px;
 			}
 
 			#resourceUsageContainer {
@@ -95,6 +100,10 @@
 			@media (max-width: 768px) {
 				#resourceUsageContainer {
 					grid-template-columns: 1fr;
+				}
+
+				.form{
+					width: 400px;
 				}
 			}
 		</style>
@@ -153,7 +162,14 @@
 		</nav>
 
 		<div class="main">
-			<form id="growCropForm" class="form"></form>
+			<form id="growCropForm" class="form">
+				<div class="title noto-sans-title">
+					Recommendations for growing <%= cropName %> at your farm
+				</div>
+				<div class="generated-response">
+					<%= generatedResponse %>
+			</div>
+			</form>
 		</div>
 	</body>
 </html>

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const twilio = require("twilio");
-const config = require("../keys.json");
+const config = require("../config.json");
 
 // const twilioClient = twilio(config.twilio.apiSid, config.twilio.authToken, config.twilio.authToken);
 const twilioClient = twilio(config.twilio.apiSid, config.twilio.authToken, {

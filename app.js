@@ -10,11 +10,11 @@ const axios = require("axios");
 const bodyParser = require("body-parser");
 const twilio = require("twilio");
 const { OpenAI } = require("openai");
-const config = require("./public/keys.json");
+const config = require("./public/config.json");
 
 const openai_key = config.openai_key;
 const openai = new OpenAI({
-	apiKey: "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",
+	apiKey: "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",
 });
 
 const twilioClient = twilio(config.twilio.apiSid, config.twilio.authToken, {
@@ -484,7 +484,7 @@ app.get(
 			const cropName = req.params.nameofthecrop;
 
 			// Create a prompt for GPT-4.0 based on coordinates and crop
-			const prompt = `Provide recommendations for growing ${cropName} at coordinates ${latitude}, ${longitude}. Include pros and cons of cultivating this crop in this location, potential markets/ports for selling and exporting, and nearby industries that utilize this crop. Please present the information in a concise format with solid points.`;
+			const prompt = `Provide recommendations for growing ${cropName} at coordinates ${latitude}, ${longitude}. Include pros and cons of cultivating this crop in this location, potential markets/ports for selling and exporting, and nearby industries that utilize this crop. Please present the information in a concise format with solid points. Do not use any formatting, present it in a way where i can i add a break statement after every full stop so it looks clean and neat. Make long resourcedul informative sentenses and the response needs to make the msot of te coordinates keeping in mind this is for a farmer for trading`;
 
 			console.log("Prompt: " + prompt);
 			console.log("Sending request to GPT");
@@ -510,8 +510,9 @@ app.get(
 			console.log(generatedResponse);
 
 			// Respond with the generated information
-			res.json({
-				message: "Agricultural recommendations generated successfully.",
+			res.render("recpage", {
+				user: req.user,
+				cropName: req.params.nameofthecrop,
 				generatedResponse,
 			});
 		} catch (error) {
