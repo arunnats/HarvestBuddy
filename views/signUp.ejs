@@ -92,6 +92,14 @@
 						min-width: 10vw;
 						overflow: auto;
 					}
+
+					.marker {
+						background-color: #ff0000;
+						width: 20px;
+						height: 20px;
+						border-radius: 50%;
+						border: 2px solid #ffffff;
+					}
 				</style>
 			</head>
 			<body>
@@ -238,8 +246,15 @@
 						// Implement your logic here to send coordinates to the server (e.g., using AJAX)
 						// ...
 					}
-
-					// Add click event listener to the map
+					
+					function addMarker(lngLat) {
+						var el = document.createElement("div");
+						el.className = "marker";
+						new mapboxgl.Marker(el)
+							.setLngLat(lngLat)
+							.addTo(map);
+					}
+				
 					map.on("dblclick", function (e) {
 						console.log("Clicked event:", e);
 						console.log("Clicked coordinates:", e.lngLat);
@@ -248,6 +263,8 @@
 						document.getElementById("latitude").value = e.lngLat.lat.toFixed(3);
 						document.getElementById("longitude").value =
 							e.lngLat.lng.toFixed(3);
+						
+						addMarker(e.lngLat);
 					});
 
 					const darkModeCheckbox =
