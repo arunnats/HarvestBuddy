@@ -18,7 +18,12 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: center;
+<<<<<<< Updated upstream
 	gap: 40px; /* Adjust the gap between cards if needed */
+=======
+	gap: 50px; /* Adjust the gap between cards if needed */
+	margin-top: 40px;
+>>>>>>> Stashed changes
 }
 
 .card {
@@ -33,7 +38,7 @@
 	border: 2px solid var(--main-color);
 	box-shadow: 4px 4px var(--main-color);
 	border-radius: 5px;
-	padding: 10px;
+	padding: 30px;
 	display: flex;
 	align-items: center ;
 	justify-content: center ;
@@ -71,7 +76,6 @@
 .card-title {
 	letter-spacing: 3px;
 	font-size: 20px;
-	font-weight: 700;
 	color: var(--font-color);
 }
 
