@@ -130,25 +130,31 @@
 
       <div class="crop-info">
         <% cropsGrown.forEach(crop => { %>
-          <div class="crop-card">
-            <div class="crop-card-content">
-              <h3><%= crop.cropName %></h3>
-              <p>Days since Sowing: <%= crop.daysPassed %></p>
-              <p>Days till Reaping: <%= crop.daysLeft %></p>
-
-              <!-- Resource Overview -->
-              <h4>Resource Overview:</h4>
-              <% if (crop.resourceOverview && crop.resourceOverview.length > 0) { %>
-                <% crop.resourceOverview.forEach(resource => { %>
+					<div class="crop-card">
+						<div class="crop-card-content">
+							<h3><%= crop.cropName %></h3>
+							<p>Days since Sowing: <%= crop.daysPassed %></p>
+							<p>Days till Reaping: <%= crop.daysLeft %></p>
+				
+							<!-- Resource Overview -->
+							<h4>Resource Overview:</h4>
+							<% if (crop.resourceOverview && crop.resourceOverview.length > 0) { %>
+								<% crop.resourceOverview.forEach(resource => { %>
 									<p>Resource: <%= resource.itemName %> | Amount Used So Far: <%= resource.itemsUsed %> | Total Amount Required: <%= resource.totalItemsNeeded %></p>
 									<hr>
 								<% }) %>
-              <% } else { %>
-                <p>No resource overview available for this crop.</p>
-              <% } %>
-            </div>
-          </div>
-        <% }) %>
+							<% } else { %>
+								<p>No resource overview available for this crop.</p>
+							<% } %>
+				
+							<!-- Button for Get Crafting Recipes -->
+							<form action="/getrecommendations/<%= crop.cropName %>" method="get">
+								<button type="submit">Get Crafting Recipes</button>
+							</form>
+						</div>
+					</div>
+				<% }) %>
+				
       </div>
     </div>
   </div>
