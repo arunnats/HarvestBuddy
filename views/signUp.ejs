@@ -38,16 +38,22 @@
 			crossorigin="anonymous"
 		></script>
 
-		<style>
+		<!-- mapbox -->
+			<script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+			<link href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
+		
+			<style>
 			body {
 				margin: 0;
 				padding: 0;
-				background: url("https://i.pinimg.com/originals/8d/85/84/8d8584afd10d26fd48fbe102722e56c6.jpg")
+				/*
+				background: url("https://i.pinimg.com/originals/8d/85/84///8d8584afd10d26fd48fbe102722e56c6.jpg")
 					no-repeat center center fixed;
 				background-size: cover;
-				
+				*/
 			}
 
+			#map { position: absolute; top: 50; bottom: 50; width: 100%; }
 			.main {
 				display: flex;
 				justify-content: center;
@@ -81,7 +87,10 @@
 		</style>
 	</head>
 	<body>
-		<nav
+
+		<div id='map'></div>
+
+		<!-- <nav
 			class="navbar navbar-expand-lg border-bottom border-body"
 			data-bs-theme="dark"
 		>
@@ -200,7 +209,7 @@
 				>
 					Let's go →
 				</button>
-			</form>
+			</form> -->
 
 		
 
@@ -219,6 +228,7 @@
 				</ul>
 			  </footer> -->
 		<script>
+			/*
 			const darkModeCheckbox = document.getElementById("dark-mode-checkbox");
 
 			darkModeCheckbox.addEventListener("change", function () {
@@ -227,6 +237,15 @@
 				} else {
 					document.body.classList.remove("dark-mode");
 				}
+			}); 
+			*/
+			
+			mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
+			var map = new mapboxgl.Map({
+				container: 'map',
+				style: 'mapbox://styles/mapbox/streets-v11', // choose your preferred style
+				center: [-73.985664, 40.748817], // initial map center coordinates [longitude, latitude]
+				zoom: 12 // initial zoom level
 			});
 		</script>
 	</body>
