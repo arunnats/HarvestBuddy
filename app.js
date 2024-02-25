@@ -13,9 +13,11 @@ const { OpenAI } = require("openai");
 const config = require("./public/config.json");
 
 const openai_key = config.openai_key;
+// const openai = new OpenAI({
+// 	apiKey: openai_key,
+// });
 const openai = new OpenAI({
-	apiKey: "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",
-});
+	apiKey: "
 
 const twilioClient = twilio(config.twilio.apiSid, config.twilio.authToken, {
 	accountSid: config.twilio.accountSid,
