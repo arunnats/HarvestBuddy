@@ -71,6 +71,53 @@ function isAuthenticated(req, res, next) {
 		res.redirect("/login");
 	}
 }
+
+const updateCropInformation = async () => {
+	try {
+		console.log("Start Updation process");
+		const users = await User.find({ "cropsGrown.0": { $exists: true } }); // Find users with non-empty cropsGrown
+
+		users.forEach(async (user) => {
+			user.cropsGrown.forEach((crop) => {
+				// Calculate daysPassed and daysLeft
+				const currentDate = new Date();
+				const startDate = new Date(crop.startDate);
+				const endDate = new Date(crop.endDate);
+
+				crop.daysPassed = Math.floor(
+					(currentDate - startDate) / (24 * 60 * 60 * 1000)
+				);
+				crop.daysLeft = Math.floor(
+					(endDate - currentDate) / (24 * 60 * 60 * 1000)
+				);
+
+				// Update resourceOverview for each resource in crop
+				crop.resourceOverview = crop.resourceUsage.map((resource) => {
+					const { itemName, amountUsed, frequency } = resource;
+					const amountUsedNow = (crop.daysPassed % frequency) * amountUsed;
+
+					return {
+						itemName,
+						itemsUsed: amountUsedNow,
+						totalItemsNeeded: amountUsed * frequency,
+					};
+				});
+			});
+
+			// Save the updated user to the database
+			await user.save();
+		});
+
+		console.log("Crop information updated successfully for all users.");
+	} catch (error) {
+		console.error("Error updating crop information:", error);
+	}
+};
+
+updateCropInformation();
+const updateInterval = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+setInterval(updateCropInformation, updateInterval);
+
 app.get("/", (req, res) => {
 	if (req.isAuthenticated()) {
 		res.redirect("/content");

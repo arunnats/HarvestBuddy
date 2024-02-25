@@ -5,6 +5,12 @@ const inventoryItemSchema = new mongoose.Schema({
 	quantity: Number,
 });
 
+const resourceUsageSchema = new mongoose.Schema({
+	itemName: String,
+	amountUsed: Number,
+	frequency: Number,
+});
+
 const cropGrownSchema = new mongoose.Schema({
 	cropName: String,
 	startDate: { type: Date, default: Date.now },
@@ -18,11 +24,14 @@ const cropGrownSchema = new mongoose.Schema({
 		},
 	},
 	estimatedTimeOfGrowth: Number,
-	resourceUsage: [
+	resourceUsage: [resourceUsageSchema],
+	daysPassed: Number,
+	daysLeft: Number,
+	resourceOverview: [
 		{
 			itemName: String,
-			amountUsed: Number,
-			frequency: Number,
+			itemsUsed: Number,
+			totalItemsNeeded: Number,
 		},
 	],
 });
