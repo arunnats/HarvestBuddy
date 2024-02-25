@@ -18,6 +18,7 @@
 				display: flex;
 				justify-content: center;
 				align-items: center;
+				flex-direction: column;
 			}
 		</style>
 	</head>
@@ -59,14 +60,73 @@
 				</div>
 			</div>
 			<div class="crop-info">
-				<div></div>
-				<div></div>
+				<% cropsGrown.forEach(crop => { %>
+						<div class="crop-details">
+								<h2>Crop: <%= crop.cropName %></h2>
+								<p>Start Date: <%= crop.startDate %></p>
+								<p>End Date: <%= crop.endDate %></p>
+								<p>Estimated Time of Growth: <%= crop.estimatedTimeOfGrowth %> days</p>
+								<p>Days Passed: <%= calculateDaysPassed(crop.startDate) %></p>
+								<p>Days Remaining: <%= calculateDaysRemaining(crop.endDate) %></p>
+		
+								<!-- Iterate over resourceUsage for each crop -->
+								<% crop.resourceUsage.forEach(resource => { %>
+										<p>
+												<%= resource.itemName %>:
+												<%= calculateItemsUsed(resource.amountUsed, resource.frequency, crop.startDate, crop.endDate) %>
+												/ <%= resource.amountUsed * calculateTotalUsageFrequency(crop.startDate, crop.endDate, resource.frequency) %>
+										</p>
+								<% }) %>
+		
+								<button onclick="recommendedAction('<%= crop.cropName %>')">Recommended Action</button>
+						</div>
+				<% }) %>
+		</div>
 			</div>
 		</div>
 		<script>
 			function redirectTo(url) {
-				window.location.href = url;
+					window.location.href = url;
 			}
-		</script>
+	
+			function calculateDaysPassed(startDate) {
+					const startTimestamp = new Date(startDate).getTime();
+					const currentTimestamp = new Date().getTime();
+					const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+					const daysPassed = Math.floor((currentTimestamp - startTimestamp) / millisecondsPerDay);
+					return daysPassed;
+			}
+	
+			function calculateDaysRemaining(endDate) {
+					const endTimestamp = new Date(endDate).getTime();
+					const currentTimestamp = new Date().getTime();
+					const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+					const daysRemaining = Math.max(0, Math.ceil((endTimestamp - currentTimestamp) / millisecondsPerDay));
+					return daysRemaining;
+			}
+	
+			function calculateItemsUsed(amountUsed, frequency, startDate, endDate) {
+					const daysPassed = calculateDaysPassed(startDate);
+					const totalUsageFrequency = calculateTotalUsageFrequency(startDate, endDate, frequency);
+					const itemsUsed = amountUsed * daysPassed / totalUsageFrequency;
+					return itemsUsed.toFixed(2); // Adjust the precision as needed
+			}
+	
+			function calculateTotalUsageFrequency(startDate, endDate, frequency) {
+					const totalDays = calculateDaysRemaining(endDate) + calculateDaysPassed(startDate);
+					const totalUsageFrequency = totalDays / frequency;
+					return totalUsageFrequency;
+			}
+	
+			// Call the functions after they have been defined
+			<% cropsGrown.forEach(crop => { %>
+					calculateDaysPassed('<%= crop.startDate %>');
+					calculateDaysRemaining('<%= crop.endDate %>');
+					<% crop.resourceUsage.forEach(resource => { %>
+							calculateItemsUsed(<%= resource.amountUsed %>, <%= resource.frequency %>, '<%= crop.startDate %>', '<%= crop.endDate %>');
+					<% }) %>
+			<% }) %>
+	</script>
+	
 	</body>
 </html>
