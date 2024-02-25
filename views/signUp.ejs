@@ -1,244 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapbox Clicked Location</title>
-
-  <!DOCTYPE html>
-<html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name='viewport' content='width=device-width, initial-scale=1' />
-		<title>Sign Up</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Mapbox Clicked Location</title>
 
-		<!-- css style sheets -->
-		<link rel="stylesheet" href="../css/loginsignupForm.css" />
-		<link rel="stylesheet" href="../css/navbar.css" />
-		<link rel="stylesheet" href="../css/styles.css" />
-		<link rel="stylesheet" href="../css/button.css" />
+		<!DOCTYPE html>
+		<html lang="en">
+			<head>
+				<meta charset="UTF-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<title>Sign Up</title>
 
-		<!--google fonds -->
+				<!-- css style sheets -->
+				<link rel="stylesheet" href="../css/loginsignupForm.css" />
+				<link rel="stylesheet" href="../css/navbar.css" />
+				<link rel="stylesheet" href="../css/styles.css" />
+				<link rel="stylesheet" href="../css/button.css" />
 
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-			rel="stylesheet"
-		/>
+				<!--google fonds -->
 
-		<link
-			href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
-			rel="stylesheet"
-		/>
+				<link rel="preconnect" href="https://fonts.googleapis.com" />
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+				<link
+					href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+					rel="stylesheet"
+				/>
 
-		<!-- bootsrap  -->
-		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-			crossorigin="anonymous"
-		/>
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-			crossorigin="anonymous"
-		></script>
+				<link
+					href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
+					rel="stylesheet"
+				/>
 
-		<!-- map-box -->
-	<script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
-	<link href="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css" rel="stylesheet" />
-<style>
-	#map{
-		width: 50vw;
-		height: 45vw;
-	}
-	
-	body{
-		padding : 0 ; 
-		margin:  0 ;
-		background : url(https://i.pinimg.com/originals/8d/85/84///8d8584afd10d26fd48fbe102722e56c6.jpg)no-repeat center center fixed;
-		background-size: cover ;
-	}
-	.container{
-		display: flex ;
-		align-items: center ;
-		justify-content: center ;
-		flex-wrap: wrap ;
-		margin-top: 70px;
-		position: relative; /* or absolute */
-		top: 0;
-		left: 0;
-		width: 100%;
-		overflow: auto ;
-		margin-top: 15px ;
-	}
+				<!-- bootsrap  -->
+				<link
+					href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+					rel="stylesheet"
+					integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+					crossorigin="anonymous"
+				/>
+				<script
+					src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+					integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+					crossorigin="anonymous"
+				></script>
 
-	@media screen and (max-width: 768px) {
-		#map {
-			width: 90vw; /* Adjust width for smaller screens */
-			height: 60vh; /* Adjust height for smaller screens */
-			margin-top: 20px; /* Add some top margin for spacing */
-			padding-bottom: 40vh ;
-			margin-bottom: 20px;
-		}
-	}
-	.main{
-		min-width: 10vw ;
-		overflow: auto ;
-	}
+				<!-- map-box -->
+				<script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
+				<link
+					href="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css"
+					rel="stylesheet"
+				/>
+				<style>
+					#map {
+						width: 50vw;
+						height: 45vw;
+						margin: 15px;
+					}
 
-  </style>
-</head>
-<body>
+					body {
+						padding: 0;
+						margin: 0;
+						background: url("https://i.pinimg.com/originals/8d/85/84///8d8584afd10d26fd48fbe102722e56c6.jpg")
+							no-repeat center center fixed;
+						background-size: cover;
+					}
+					.container {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						flex-wrap: wrap;
+						margin-top: 70px;
+						position: relative; /* or absolute */
+						top: 0;
+						left: 0;
+						width: 100%;
+						overflow: auto;
+						margin-top: 15px;
+					}
 
-	<nav
-			class="navbar navbar-expand-lg border-bottom border-body"
-			data-bs-theme="dark"
-		>
-			<div class="container-fluid">
-				<a class="navbar-brand" href="/content">
-					<img src="/images/logo-nobg.png" alt="Logo" height="30" />
-				</a>
-				<button
-					class="navbar-toggler"
-					type="button"
-					data-bs-toggle="collapse"
-					data-bs-target="#navbarColor01"
-					aria-controls="navbarColor01"
-					aria-expanded="false"
-					aria-label="Toggle navigation"
+					@media screen and (max-width: 768px) {
+						#map {
+							width: 90vw; /* Adjust width for smaller screens */
+							height: 60vh; /* Adjust height for smaller screens */
+							margin-top: 20px; /* Add some top margin for spacing */
+							padding-bottom: 40vh;
+							margin-bottom: 20px;
+						}
+					}
+					.main {
+						min-width: 10vw;
+						overflow: auto;
+					}
+				</style>
+			</head>
+			<body>
+				<nav
+					class="navbar navbar-expand-lg border-bottom border-body"
+					data-bs-theme="dark"
 				>
-					<span class="navbar-toggler-icon" id="drop_down"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarColor01">
-					<ul class="navbar-nav ms-auto"></ul>
-					<div class="theme_container">
-						<label class="switch" id="dark-mode">
-							<span class="sun">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-									<g fill="#ffd43b">
-										<circle r="5" cy="12" cx="12"></circle>
-										<path
-											d="m21 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm-17 0h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm13.66-5.66a1 1 0 0 1 -.66-.29 1 1 0 0 1 0-1.41l.71-.71a1 1 0 1 1 1.41 1.41l-.71.71a1 1 0 0 1 -.75.29zm-12.02 12.02a1 1 0 0 1 -.71-.29 1 1 0 0 1 0-1.41l.71-.66a1 1 0 0 1 1.41 1.41l-.71.71a1 1 0 0 1 -.7.24zm6.36-14.36a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm0 17a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm-5.66-14.66a1 1 0 0 1 -.7-.29l-.71-.71a1 1 0 0 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.29zm12.02 12.02a1 1 0 0 1 -.7-.29l-.66-.71a1 1 0 0 1 1.36-1.36l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.24z"
-										></path>
-									</g>
-								</svg>
-							</span>
-							<span class="moon">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-									<path
-										d="m223.5 32c-123.5 0-223.5 100.3-223.5 224s100 224 223.5 224c60.6 0 115.5-24.2 155.8-63.4 5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6-96.9 0-175.5-78.8-175.5-176 0-65.8 36-123.1 89.3-153.3 6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
-									></path>
-								</svg>
-							</span>
-							<input type="checkbox" class="input" id="dark-mode-checkbox" />
-							<span class="slider"></span>
-						</label>
+					<div class="container-fluid">
+						<a class="navbar-brand" href="/content">
+							<img src="/images/logo-nobg.png" alt="Logo" height="30" />
+						</a>
+						<button
+							class="navbar-toggler"
+							type="button"
+							data-bs-toggle="collapse"
+							data-bs-target="#navbarColor01"
+							aria-controls="navbarColor01"
+							aria-expanded="false"
+							aria-label="Toggle navigation"
+						>
+							<span class="navbar-toggler-icon" id="drop_down"></span>
+						</button>
+						<div class="collapse navbar-collapse" id="navbarColor01">
+							<ul class="navbar-nav ms-auto"></ul>
+							<div class="theme_container">
+								<label class="switch" id="dark-mode">
+									<span class="sun">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+											<g fill="#ffd43b">
+												<circle r="5" cy="12" cx="12"></circle>
+												<path
+													d="m21 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm-17 0h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm13.66-5.66a1 1 0 0 1 -.66-.29 1 1 0 0 1 0-1.41l.71-.71a1 1 0 1 1 1.41 1.41l-.71.71a1 1 0 0 1 -.75.29zm-12.02 12.02a1 1 0 0 1 -.71-.29 1 1 0 0 1 0-1.41l.71-.66a1 1 0 0 1 1.41 1.41l-.71.71a1 1 0 0 1 -.7.24zm6.36-14.36a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm0 17a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm-5.66-14.66a1 1 0 0 1 -.7-.29l-.71-.71a1 1 0 0 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.29zm12.02 12.02a1 1 0 0 1 -.7-.29l-.66-.71a1 1 0 0 1 1.36-1.36l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.24z"
+												></path>
+											</g>
+										</svg>
+									</span>
+									<span class="moon">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 384 512"
+										>
+											<path
+												d="m223.5 32c-123.5 0-223.5 100.3-223.5 224s100 224 223.5 224c60.6 0 115.5-24.2 155.8-63.4 5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6-96.9 0-175.5-78.8-175.5-176 0-65.8 36-123.1 89.3-153.3 6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
+											></path>
+										</svg>
+									</span>
+									<input
+										type="checkbox"
+										class="input"
+										id="dark-mode-checkbox"
+									/>
+									<span class="slider"></span>
+								</label>
+							</div>
+						</div>
 					</div>
+				</nav>
+				<div class="container">
+					<div class="main">
+						<form class="form" action="/signup" method="post">
+							<div class="title noto-sans-title">
+								Create an Account<br /><span>get started today</span>
+							</div>
+							<input
+								type="text"
+								placeholder="Full Name"
+								name="name"
+								class="input noto-sans-title"
+								required
+							/>
+							<input
+								type="email"
+								placeholder="Email"
+								name="email"
+								class="input noto-sans-title"
+								required
+							/>
+							<input
+								type="text"
+								placeholder="Phone Number"
+								name="phone"
+								class="input noto-sans-title"
+								required
+							/>
+							<input
+								type="password"
+								placeholder="Password"
+								name="password"
+								class="input"
+								required
+							/>
+							<input
+								type="password"
+								placeholder="Confirm Password"
+								name="confirmPassword"
+								class="input"
+								required
+							/>
+
+							<input type="hidden" id="latitude" name="latitude" />
+							<input type="hidden" id="longitude" name="longitude" />
+
+							<div class="title noto-sans-title">
+								Enter your farm's location,<br /><span
+									>get real-time updates</span
+								>
+							</div>
+
+							<input
+								type="text"
+								placeholder="Location Name"
+								name="locationName"
+								class="input noto-sans-title"
+								required
+							/>
+
+							<button
+								type="submit"
+								class="button-confirm noto-sans-title vt323-regular"
+							>
+								Let's go →
+							</button>
+						</form>
+					</div>
+					<div id="map"></div>
 				</div>
-			</div>
-		</nav>
-	<div class="container">
-	<div class="main">
-		<form class="form" action="/signup" method="post">
-			<div class="title noto-sans-title">
-				Create an Account<br /><span>get started today</span>
-			</div>
-			<input
-				type="text"
-				placeholder="Full Name"
-				name="name"
-				class="input noto-sans-title"
-				required
-			/>
-			<input
-				type="email"
-				placeholder="Email"
-				name="email"
-				class="input noto-sans-title"
-				required
-			/>
-			<input
-				type="text"
-				placeholder="Phone Number"
-				name="phone"
-				class="input noto-sans-title"
-				required
-			/>
-			<input
-				type="password"
-				placeholder="Password"
-				name="password"
-				class="input"
-				required
-			/>
-			<input
-				type="password"
-				placeholder="Confirm Password"
-				name="confirmPassword"
-				class="input"
-				required
-			/>
+				<script>
+					// Replace with your Mapbox access token
+					mapboxgl.accessToken =
+						"pk.eyJ1IjoiYXJ1bm5hdHMiLCJhIjoiY2x0MTIzMW5pMHg3aTJrb2VrbjdkYnh2MSJ9.MxgDnACpcON2FnnRipwtXg";
 
-			<div class="title noto-sans-title">
-				Enter your farm's location,<br /><span>get real-time updates</span>
-			</div>
-			
-			<input
-				type="text"
-				placeholder="Location Name"
-				name="locationName"
-				class="input noto-sans-title"
-				required
-			/>
+					var map = new mapboxgl.Map({
+						container: "map",
+						style: "mapbox://styles/mapbox/streets-v11",
+						center: [75.93418856776407, 11.321488534208868],
+						zoom: 13,
+					});
 
-			<button
-				type="submit"
-				class="button-confirm noto-sans-title vt323-regular"
-			>
-				Let's go →
-			</button>
-		</form>
-	</div>
-  	<div id="map"></div>
-	</div>
-  <script>
-    // Replace with your Mapbox access token
-    mapboxgl.accessToken = 'pk.eyJ1IjoiYXJ1bm5hdHMiLCJhIjoiY2x0MTIzMW5pMHg3aTJrb2VrbjdkYnh2MSJ9.MxgDnACpcON2FnnRipwtXg';
+					// Function to display clicked location coordinates
+					function showCoordinates(lngLat) {
+						var lat = lngLat.lat.toFixed(3);
+						var lng = lngLat.lng.toFixed(3);
+						console.log("Clicked location coordinates:", lat, lng);
+						// Implement your logic here to send coordinates to the server (e.g., using AJAX)
+						// ...
+					}
 
-    var map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [ 75.93418856776407 , 11.321488534208868],
-      zoom: 13
-    });
+					// Add click event listener to the map
+					map.on("dblclick", function (e) {
+						console.log("Clicked event:", e);
+						console.log("Clicked coordinates:", e.lngLat);
 
-    // Function to display clicked location coordinates
-    function showCoordinates(lngLat) {
-      var lat = lngLat.lat.toFixed(3);
-      var lng = lngLat.lng.toFixed(3);
-      console.log("Clicked location coordinates:", lat, lng);
-      // Implement your logic here to send coordinates to the server (e.g., using AJAX)
-      // ...
-    }
+						// Update hidden input fields with latitude and longitude
+						document.getElementById("latitude").value = e.lngLat.lat.toFixed(3);
+						document.getElementById("longitude").value =
+							e.lngLat.lng.toFixed(3);
+					});
 
-    // Add click event listener to the map
-    map.on('dblclick', function (e) {
-		console.log('Clicked event:', e);
-  		console.log('Clicked coordinates:', e.lngLat);
-    });
+					const darkModeCheckbox =
+						document.getElementById("dark-mode-checkbox");
 
-	const darkModeCheckbox = document.getElementById("dark-mode-checkbox");
-
-			darkModeCheckbox.addEventListener("change", function () {
-				if (this.checked) {
-					document.body.classList.add("dark-mode");
-				} else {
-					document.body.classList.remove("dark-mode");
-				}
-	}); 
-
-  </script>
-</body>
+					darkModeCheckbox.addEventListener("change", function () {
+						if (this.checked) {
+							document.body.classList.add("dark-mode");
+						} else {
+							document.body.classList.remove("dark-mode");
+						}
+					});
+				</script>
+			</body>
+		</html>
+	</head>
 </html>
