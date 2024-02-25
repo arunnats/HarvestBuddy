@@ -39,13 +39,26 @@
 		<style>
 			.main {
 				display: flex;
-				align-items: center;
 				justify-content: center;
-				width: 100%;
+				align-items: center;
+				flex-wrap: wrap;
+				position: relative; /* or absolute */
+    			top: 0;
+    			left: 0;
+    			width: 100%;
+    			height: 100vh;
+				overflow: auto ;
 				background-color: var(--background-color);
-				flex-direction: column;
-				overflow: auto; /* Allow overflow to enable scrolling */
-		}
+				flex-direction: column ;
+			}
+
+			.navbar.navbar-expand-lg.border-bottom.border-body{
+				position: absolute;
+				top: 0 ;
+				left: 0 ;
+				right: 0 ;
+				z-index: 20 ;
+			  }
 		</style>
 	</head>
 	<body>
