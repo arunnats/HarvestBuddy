@@ -29,20 +29,29 @@
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 	
 		<style>
-			.main {
-				position: fixed;
-				display: flex ;
-				align-items: center ;
+			.main{
+				display: flex;
 				justify-content: center;
-				top: 0;
-				left: 0;
-				width: 100%; /* Occupy full width */
-				height: 100%; /* Occupy full height */
-				background-color: var(--background-color); /* Set background color */
-				flex-wrap: wrap ;
-				z-index: 1; 
-			}
+				align-items: center;
+				flex-wrap: wrap;
+				position: relative; /* or absolute */
+    			top: 0;
+    			left: 0;
+    			width: 100%;
+    			height: 100vh;
+				overflow: auto ;
+				background-color: var(--background-color);
+				flex-direction: column ;
+			  }
 
+
+			  .navbar.navbar-expand-lg.border-bottom.border-body{
+				position: absolute;
+				top: 0 ;
+				left: 0 ;
+				right: 0 ;
+				z-index: 20 ;
+			  }
 		</style>
 	</head>
 	<body>
