@@ -5,12 +5,6 @@ const inventoryItemSchema = new mongoose.Schema({
 	quantity: Number,
 });
 
-const resourceUsageSchema = new mongoose.Schema({
-	itemName: String,
-	amountUsed: Number,
-	frequency: Number,
-});
-
 const cropGrownSchema = new mongoose.Schema({
 	cropName: String,
 	startDate: { type: Date, default: Date.now },
@@ -24,14 +18,11 @@ const cropGrownSchema = new mongoose.Schema({
 		},
 	},
 	estimatedTimeOfGrowth: Number,
-	resourceUsage: [resourceUsageSchema],
-	daysPassed: Number,
-	daysLeft: Number,
-	resourceOverview: [
+	resourceUsage: [
 		{
 			itemName: String,
-			itemsUsed: Number,
-			totalItemsNeeded: Number,
+			amountUsed: Number,
+			frequency: Number,
 		},
 	],
 });
@@ -55,5 +46,32 @@ const userSchema = new mongoose.Schema({
 	},
 	cropsGrown: [cropGrownSchema],
 });
+
+// Function to update inventory based on crop growth
+userSchema.methods.updateInventory = function () {
+	this.cropsGrown.forEach((crop) => {
+		crop.resourceUsage.forEach((resource) => {
+			const daysPassed = Math.floor(
+				(Date.now() - crop.startDate) / (1000 * 60 * 60 * 24)
+			);
+
+			if (daysPassed % resource.frequency === 0 && daysPassed > 0) {
+				const quantityToSubtract = resource.amountUsed;
+
+				// Update the inventory by subtracting the specified amount
+				this.inventory[resource.itemName].forEach((item) => {
+					if (item.quantity >= quantityToSubtract) {
+						item.quantity -= quantityToSubtract;
+					} else {
+						// Handle the case where the quantity is not enough
+						console.error(
+							`Insufficient quantity of ${resource.itemName} in inventory.`
+						);
+					}
+				});
+			}
+		});
+	});
+};
 
 module.exports = mongoose.model("User", userSchema);
