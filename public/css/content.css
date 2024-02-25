@@ -18,7 +18,12 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: center;
-	gap: 20px; /* Adjust the gap between cards if needed */
+<<<<<<< Updated upstream
+	gap: 40px; /* Adjust the gap between cards if needed */
+=======
+	gap: 50px; /* Adjust the gap between cards if needed */
+	margin-top: 40px;
+>>>>>>> Stashed changes
 }
 
 .card {
@@ -33,12 +38,31 @@
 	border: 2px solid var(--main-color);
 	box-shadow: 4px 4px var(--main-color);
 	border-radius: 5px;
-	padding: 10px;
+	padding: 30px;
 	display: flex;
 	align-items: center ;
 	justify-content: center ;
 	flex-direction: column;
 	margin: 10px;
+}
+
+.crop-card {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px; /* Add some spacing between each crop card */
+}
+
+.crop-card-content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px; /* Add padding for better readability */
+}
+
+@media only screen and (max-width: 1000px) {
+    .crop-card,
+    .crop-card-content {
+        min-width: auto; /* Remove the minimum width */
+    }
 }
 
 .card-content-wrapper {
@@ -52,7 +76,6 @@
 .card-title {
 	letter-spacing: 3px;
 	font-size: 20px;
-	font-weight: 700;
 	color: var(--font-color);
 }
 
