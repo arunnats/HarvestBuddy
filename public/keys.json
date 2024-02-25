@@ -1,0 +1,14 @@
+{
+	"mongodb": {
+		"connectionString": "mongodb+srv://login:DouglasAdams42@cluster0.bpavk21.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+	},
+	"session": {
+		"secret": "your-secret-key"
+	},
+	"twilio": {
+		"apiSid": "SKd2459d8527f5213cebe8eafac8003475",
+		"authToken": "73JDKEDqex1MuonpQmA0DKxfSmo5pO4o",
+		"accountSid": "AC5ce5e8636a5def447e61c99042751d90",
+		"phoneNumber": "+1 386 310 3856"
+	}
+}

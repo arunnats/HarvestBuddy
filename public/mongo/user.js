@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 const twilio = require("twilio");
+const config = require("../keys.json");
 
-const twilioClient = twilio(
-	"AC5ce5e8636a5def447e61c99042751d90",
-	"fa5cb8c713866c774a1b2ab4d901d05e"
-);
+// const twilioClient = twilio(config.twilio.apiSid, config.twilio.authToken, config.twilio.authToken);
+const twilioClient = twilio(config.twilio.apiSid, config.twilio.authToken, {
+	accountSid: config.twilio.accountSid,
+});
 
 const inventoryItemSchema = new mongoose.Schema({
 	name: String,
@@ -69,6 +70,7 @@ const userSchema = new mongoose.Schema({
 });
 
 // Function to update inventory based on crop growth
+// Function to update inventory based on crop growth
 userSchema.methods.updateInventory = async function () {
 	// Iterate over crops asynchronously
 	for (const crop of this.cropsGrown) {
@@ -88,15 +90,33 @@ userSchema.methods.updateInventory = async function () {
 
 						// Send SMS alert
 						await twilioClient.messages.create({
-							body: `Alert: You used ${quantityToSubtract} units of ${resource.itemName}. You have ${item.quantity} units left.`,
+							body: `Alert: You used ${quantityToSubtract} units of ${resource.itemName}. You have ${item.quantity} units left for ${crop.cropName}.`,
 							to: this.phone,
 							from: "+1 386 310 3856", // Replace with your Twilio phone number
 						});
 					} else {
 						// Handle the case where the quantity is not enough
 						console.error(
-							`Insufficient quantity of ${resource.itemName} in inventory.`
+							`Insufficient quantity of ${resource.itemName} in inventory for ${crop.cropName}.`
 						);
+
+						// Send SMS alert about insufficient quantity
+						await twilioClient.messages.create({
+							body: `Alert: Insufficient quantity of ${resource.itemName} in inventory for ${crop.cropName}.`,
+							to: this.phone,
+							from: "+1 386 310 3856", // Replace with your Twilio phone number
+						});
+
+						// Check if the next date of usage is within the reminder threshold (e.g., 5 days)
+						const nextDateOfUsage =
+							crop.startDate.getTime() + (daysPassed + 1) * 24 * 60 * 60 * 1000;
+						const reminderThreshold = 5 * 24 * 60 * 60 * 1000; // 5 days in milliseconds
+
+						if (nextDateOfUsage - Date.now() < reminderThreshold) {
+							console.log(
+								`Reminder: Add more ${resource.itemName} to inventory for ${crop.cropName}.`
+							);
+						}
 					}
 				}
 			}

@@ -8,15 +8,19 @@ const path = require("path");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 const bodyParser = require("body-parser");
+const twilio = require("twilio");
+const config = require("./public/keys.json");
+
+const twilioClient = twilio(config.twilio.apiSid, config.twilio.authToken, {
+	accountSid: config.twilio.accountSid,
+});
 
 const app = express();
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-mongoose.connect(
-	"mongodb+srv://login:DouglasAdams42@cluster0.bpavk21.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-);
+mongoose.connect(config.mongodb.connectionString);
 
 passport.use(
 	new LocalStrategy(
@@ -258,6 +262,23 @@ app.post("/inventory", async (req, res) => {
 			}
 		};
 
+		// Function to send SMS alerts
+		const sendSMSAlert = async (phoneNumber, message) => {
+			try {
+				console.log("Sending SMS alert to:", phoneNumber);
+				console.log("SMS message:", message);
+
+				await twilioClient.messages.create({
+					body: message,
+					to: phoneNumber,
+					from: "+1 386 310 3856",
+				});
+				console.log("SMS alert sent successfully.");
+			} catch (error) {
+				console.error("Error sending SMS alert:", error);
+			}
+		};
+
 		// Logic based on the operation
 		if (operation === "new") {
 			// Check if an item with the same name already exists
@@ -269,7 +290,12 @@ app.post("/inventory", async (req, res) => {
 			} else {
 				// Create a new item
 				const newItem = createNewItem();
-				await user.save(); // Save the updated user to the database
+				await user.save();
+
+				// Send SMS alert for creating a new inventory item
+				const message = `Alert: You added a new inventory item (${newItem.name}) with ${newItem.quantity} units.`;
+				await sendSMSAlert(user.phone, message);
+
 				return res.json({ message: "New item created successfully.", newItem });
 			}
 		} else if (operation === "add" || operation === "subtract") {
@@ -288,7 +314,12 @@ app.post("/inventory", async (req, res) => {
 					const quantityChange = parseInt(modifyQuantity) || 0;
 					if (operation === "add") {
 						updateItemQuantity(existingItem, quantityChange);
-						await user.save(); // Save the updated user to the database
+						await user.save();
+
+						// Send SMS alert for adding to inventory
+						const message = `Alert: You added ${quantityChange} units of ${existingItem.name} to your inventory. Total: ${existingItem.quantity} units.`;
+						await sendSMSAlert(user.phone, message);
+
 						return res.json({
 							message: "Quantity added successfully.",
 							updatedItem: existingItem,
@@ -296,7 +327,12 @@ app.post("/inventory", async (req, res) => {
 					} else {
 						// Subtract operation
 						updateItemQuantity(existingItem, -quantityChange);
-						await user.save(); // Save the updated user to the database
+						await user.save();
+
+						// Send SMS alert for subtracting from inventory
+						const message = `Alert: You subtracted ${quantityChange} units of ${existingItem.name} from your inventory. Total: ${existingItem.quantity} units.`;
+						await sendSMSAlert(user.phone, message);
+
 						return res.json({
 							message: "Quantity subtracted successfully.",
 							updatedItem: existingItem,
@@ -374,6 +410,22 @@ app.post("/grow-crop", isAuthenticated, async (req, res) => {
 		endDate.setDate(endDate.getDate() + parseInt(estimatedTimeOfGrowth, 10));
 		const endDateISO = endDate.toISOString();
 
+		const sendSMSAlert = async (phoneNumber, message) => {
+			try {
+				console.log("Sending SMS alert to:", phoneNumber);
+				console.log("SMS message:", message);
+
+				await twilioClient.messages.create({
+					body: message,
+					to: phoneNumber,
+					from: "+1 386 310 3856",
+				});
+				console.log("SMS alert sent successfully.");
+			} catch (error) {
+				console.error("Error sending SMS alert:", error);
+			}
+		};
+
 		console.log("Collected Crop Data:", {
 			cropName,
 			startDate,
@@ -392,7 +444,24 @@ app.post("/grow-crop", isAuthenticated, async (req, res) => {
 
 		await req.user.save();
 
-		res.json({ message: "Crop grown successfully." });
+		// Prepare detailed message
+		const message = `Crop grown successfully!
+    Crop Name: ${cropName}
+    Start Date: ${startDate}
+    End Date: ${endDateISO}
+    Estimated Time of Growth: ${estimatedTimeOfGrowth} days
+    Resource Usage:
+    ${resourceUsageData
+			.map(
+				(resource) =>
+					`${resource.itemName} - Amount Used: ${resource.amountUsed}, Frequency: ${resource.frequency} days`
+			)
+			.join("\n")}`;
+
+		// Send SMS
+		await sendSMSAlert(req.user.phone, message);
+
+		res.json({ message: "Crop grown successfully. SMS sent." });
 	} catch (error) {
 		console.error("Error processing /grow-crop POST request:", error);
 		res.status(500).json({ error: "Internal server error." });

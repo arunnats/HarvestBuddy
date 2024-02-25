@@ -48,7 +48,6 @@
     			left: 0;
     			width: 100%;
 				overflow: auto ;
-				background-color: var(--background-color);
 				flex-direction: column ;
 				margin-top: 15px ;
 			}
@@ -114,16 +113,16 @@
 
         <div class="card">
           <div class="card-content-wrapper">
-            <div class="card-title vt323-regular" style = "font-size : 25px ;">Manage Inventory</div>
+            <div class="card-title vt323-regular" style = "font-size : 25px ;" >Manage Inventory</div>
           </div>
-          <button class="button vt323-regular" style = "width : 200px ; margin-top : 20px">More info</button>
+          <button class="button vt323-regular" onclick="redirectTo('/inventory')" style = "width : 200px ; margin-top : 20px">Go to Inventory!</button>
         </div>
 
         <div class="card">
           <div class="card-content-wrapper">
             <div class="card-title vt323-regular" style = "font-size : 25px ;" >Grow Crop</div>
           </div>
-          <button class="button vt323-regular" style = "width : 200px ; margin-top : 20px">More info</button>
+          <button class="button vt323-regular" onclick="redirectTo('/grow-crop')" style = "width : 200px ; margin-top : 20px">Grow Crops!</button>
         </div>
       </div>
 
@@ -134,8 +133,8 @@
           <div class="crop-card">
             <div class="crop-card-content">
               <h3><%= crop.cropName %></h3>
-              <p>Days Passed: <%= crop.daysPassed %></p>
-              <p>Days Left: <%= crop.daysLeft %></p>
+              <p>Days since Sowing: <%= crop.daysPassed %></p>
+              <p>Days till Reaping: <%= crop.daysLeft %></p>
 
               <!-- Resource Overview -->
               <h4>Resource Overview:</h4>
