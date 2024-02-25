@@ -2,7 +2,6 @@
   .navbar.navbar-expand-lg.border-bottom.border-body{
     background-color: var(--nav-color);
     border: none ;
-    z-index: 999 ;
   }
   
   .navbar .nav-link , .navbar .nav-link.active , .navbar .navbar-brand{
@@ -166,6 +165,7 @@
   /* footer */
 
   #footer {
+    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
