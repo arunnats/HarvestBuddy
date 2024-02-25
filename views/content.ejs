@@ -130,15 +130,24 @@
 				<br>
 				<div class="crop-info">
 					<% cropsGrown.forEach(crop => { %>
-            <div class="crop-card">
-                <div class="crop-card-content-wrapper">
-                    <div class="crop-card-title">Crop: <%= crop.cropName %></div>
-          
-
-										<button class="crop-card-btn" id="recommendedActionBtn" onclick="handleRecommendedAction('<%= crop.cropName %>')">Recommended Action</button>
-								</div>
-            </div>
-        <% }) %>
+						<div class="crop-card">
+							<div class="crop-card-content">
+								<h3><%= crop.cropName %></h3>
+								<p>Days Passed: <%= crop.daysPassed %></p>
+								<p>Days Left: <%= crop.daysLeft %></p>
+								
+								<!-- Resource Overview -->
+								<h4>Resource Overview:</h4>
+								<% crop.resourceOverview.forEach(resource => { %>
+									<p>Resource: <%= resource.itemName %></p>
+									<p>Current Amount: <!-- Add logic to get current amount --></p>
+									<p>Amount Used So Far: <%= resource.itemsUsed %></p>
+									<p>Total Amount Required: <%= resource.totalItemsNeeded %></p>
+									<hr>
+								<% }) %>
+							</div>
+						</div>
+					<% }) %>
 				</div>
 			</div>
 			</div>
