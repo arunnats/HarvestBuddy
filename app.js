@@ -71,6 +71,53 @@ function isAuthenticated(req, res, next) {
 		res.redirect("/login");
 	}
 }
+
+const updateCropInformation = async () => {
+	try {
+		console.log("Start Updation process");
+		const users = await User.find({ "cropsGrown.0": { $exists: true } }); // Find users with non-empty cropsGrown
+
+		users.forEach(async (user) => {
+			user.cropsGrown.forEach((crop) => {
+				// Calculate daysPassed and daysLeft
+				const currentDate = new Date();
+				const startDate = new Date(crop.startDate);
+				const endDate = new Date(crop.endDate);
+
+				crop.daysPassed = Math.floor(
+					(currentDate - startDate) / (24 * 60 * 60 * 1000)
+				);
+				crop.daysLeft = Math.floor(
+					(endDate - currentDate) / (24 * 60 * 60 * 1000)
+				);
+
+				// Update resourceOverview for each resource in crop
+				crop.resourceOverview = crop.resourceUsage.map((resource) => {
+					const { itemName, amountUsed, frequency } = resource;
+					const amountUsedNow = (crop.daysPassed % frequency) * amountUsed;
+
+					return {
+						itemName,
+						itemsUsed: amountUsedNow,
+						totalItemsNeeded: amountUsed * frequency,
+					};
+				});
+			});
+
+			// Save the updated user to the database
+			await user.save();
+		});
+
+		console.log("Crop information updated successfully for all users.");
+	} catch (error) {
+		console.error("Error updating crop information:", error);
+	}
+};
+
+updateCropInformation();
+const updateInterval = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+setInterval(updateCropInformation, updateInterval);
+
 app.get("/", (req, res) => {
 	if (req.isAuthenticated()) {
 		res.redirect("/content");
@@ -306,7 +353,7 @@ app.post("/inventory", async (req, res) => {
 	}
 });
 
-app.get("/api/items", async (req, res) => {
+app.get("/api/items", isAuthenticated, async (req, res) => {
 	try {
 		const category = req.query.category;
 
@@ -316,13 +363,8 @@ app.get("/api/items", async (req, res) => {
 			return;
 		}
 
-		// Retrieve all user data (assuming a small number of users)
-		const users = await User.find();
-
-		// Extract item names from the specified category across all users
-		const itemNames = users
-			.flatMap((user) => user.inventory[category])
-			.map((item) => item.name);
+		// Extract item names from the specified category of the currently logged-in user
+		const itemNames = req.user.inventory[category].map((item) => item.name);
 
 		res.json({ itemNames });
 	} catch (error) {
@@ -331,15 +373,10 @@ app.get("/api/items", async (req, res) => {
 	}
 });
 
-app.get("/api/seeds", async (req, res) => {
+app.get("/api/seeds", isAuthenticated, async (req, res) => {
 	try {
-		// Retrieve all user data (assuming a small number of users)
-		const users = await User.find();
-
-		// Extract seed names from the "seeds" category across all users
-		const seedNames = users
-			.flatMap((user) => user.inventory.seeds)
-			.map((seed) => seed.name);
+		// Extract seed names from the "seeds" category of the currently logged-in user
+		const seedNames = req.user.inventory.seeds.map((seed) => seed.name);
 
 		res.json({ seedNames });
 	} catch (error) {
@@ -348,27 +385,13 @@ app.get("/api/seeds", async (req, res) => {
 	}
 });
 
-app.get("/api/inventory/categories", async (req, res) => {
+app.get("/api/inventory/categories", isAuthenticated, async (req, res) => {
 	try {
-		const users = await User.find();
+		const inventoryCategories = Object.keys(req.user.inventory || {}).filter(
+			(category) => category !== "seeds"
+		);
 
-		// Extract unique categories from all users
-		const categoriesSet = new Set();
-
-		users.forEach((user) => {
-			const inventory = user.inventory || {};
-
-			Object.keys(inventory).forEach((category) => {
-				// Exclude 'seeds' category
-				if (category !== "seeds") {
-					categoriesSet.add(category);
-				}
-			});
-		});
-		console.log(categoriesSet);
-		const categories = Array.from(categoriesSet);
-		console.log(categories);
-		res.json({ categories });
+		res.json({ categories: inventoryCategories });
 	} catch (error) {
 		console.error("Error fetching inventory categories:", error);
 		res.status(500).json({ error: "Internal server error." });
