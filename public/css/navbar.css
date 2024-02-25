@@ -166,12 +166,11 @@
   /* footer */
 
   #footer {
-    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     background-color: #fff; /* Adjust as needed */
-    z-index: 999; /* Adjust the value as needed */
+    z-index: 1 ; /* Adjust the value as needed */
     margin: 0 ;
     padding: 0 ;
     color: var(--font-color);
