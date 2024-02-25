@@ -184,3 +184,21 @@
 	font-weight: 700;
 	letter-spacing: 1px;
 }
+
+.crop-card {
+	--main-focus: #2d8cf0;
+	--font-color: #323232;
+	--font-color-sub: #666;
+	--bg-color: #fff;
+	--main-color: #323232;
+	width: 1050px;
+	height: 200px;
+	background: var(--bg-color);
+	border: 2px solid var(--main-color);
+	box-shadow: 4px 4px var(--main-color);
+	border-radius: 5px;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 20px; /* Adjust the margin between rows if needed */
+}
