@@ -131,7 +131,13 @@
 											const daysPassed = Math.floor((currentTimestamp - startTimestamp) / millisecondsPerDay);
 											return daysPassed;
 									})(crop.startDate) %></p>
-											
+									<p>Days Remaining: <%= (function(endDate) {
+										const endTimestamp = new Date(endDate).getTime();
+										const currentTimestamp = new Date().getTime();
+										const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+										const daysRemaining = Math.max(0, Math.ceil((endTimestamp - currentTimestamp) / millisecondsPerDay));
+										return daysRemaining;
+								})(crop.endDate) %></p>
 
                     <button class="crop-card-btn" onclick="recommendedAction('<%= crop.cropName %>')">Recommended Action</button>
                 </div>
