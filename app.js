@@ -9,7 +9,13 @@ const bcrypt = require("bcrypt");
 const axios = require("axios");
 const bodyParser = require("body-parser");
 const twilio = require("twilio");
+const { OpenAI } = require("openai");
 const config = require("./public/keys.json");
+
+const openai_key = config.openai_key;
+const openai = new OpenAI({
+	apiKey: "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",
+});
 
 const twilioClient = twilio(config.twilio.apiSid, config.twilio.authToken, {
 	accountSid: config.twilio.accountSid,
@@ -466,6 +472,59 @@ app.post("/grow-crop", isAuthenticated, async (req, res) => {
 		console.error("Error processing /grow-crop POST request:", error);
 		res.status(500).json({ error: "Internal server error." });
 	}
+});
+
+app.get(
+	"/getrecommendations/:nameofthecrop",
+	isAuthenticated,
+	async (req, res) => {
+		try {
+			// Access the currently logged-in user's information
+			const { latitude, longitude } = req.user.farm;
+			const cropName = req.params.nameofthecrop;
+
+			// Create a prompt for GPT-4.0 based on coordinates and crop
+			const prompt = `Provide recommendations for growing ${cropName} at coordinates ${latitude}, ${longitude}. Include pros and cons of cultivating this crop in this location, potential markets/ports for selling and exporting, and nearby industries that utilize this crop. Please present the information in a concise format with solid points.`;
+
+			console.log("Prompt: " + prompt);
+			console.log("Sending request to GPT");
+
+			const response = await openai.chat.completions.create({
+				model: "gpt-3.5-turbo",
+				messages: [
+					{
+						role: "system",
+						content:
+							"You are an agriculture information assistant. You will provide detailed information about the cultivation of crops, including recommendations, pros and cons, market/ports, and nearby industries. Your output should be informative and concise, structured in a way that addresses each aspect separately.",
+					},
+					{
+						role: "user",
+						content: prompt,
+					},
+				],
+			});
+
+			// Extract the generated response
+			const generatedResponse = response.choices[0]?.message?.content;
+
+			console.log(generatedResponse);
+
+			// Respond with the generated information
+			res.json({
+				message: "Agricultural recommendations generated successfully.",
+				generatedResponse,
+			});
+		} catch (error) {
+			console.error("Error generating agricultural recommendations:", error);
+			res.status(500).json({ error: "Internal server error." });
+		}
+	}
+);
+
+app.get("/getrecommendations", isAuthenticated, (req, res) => {
+	const user = req.user;
+
+	res.render("recpage", { user });
 });
 
 const PORT = process.env.PORT || 3000;

@@ -10,5 +10,8 @@
 		"authToken": "73JDKEDqex1MuonpQmA0DKxfSmo5pO4o",
 		"accountSid": "AC5ce5e8636a5def447e61c99042751d90",
 		"phoneNumber": "+1 386 310 3856"
+	},
+	"openai": {
+		"apiKey": "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"
 	}
 }
