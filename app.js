@@ -17,7 +17,8 @@ const openai_key = config.openai_key;
 // 	apiKey: openai_key,
 // });
 const openai = new OpenAI({
-	apiKey: "
+	apiKey: "",
+});
 
 const twilioClient = twilio(config.twilio.apiSid, config.twilio.authToken, {
 	accountSid: config.twilio.accountSid,
@@ -208,14 +209,25 @@ app.post("/signup", async (req, res) => {
 	}
 });
 
-app.post(
-	"/login",
-	passport.authenticate("local", {
-		successRedirect: "/content",
-		failureRedirect: "/login",
-		failureFlash: true,
-	})
-);
+app.post("/login", (req, res, next) => {
+	passport.authenticate("local", (err, user, info) => {
+		if (err) {
+			return next(err);
+		}
+		if (!user) {
+			// Authentication failed, redirect to login and show an alert
+			return res.redirect("/login?error=Incorrect credentials");
+		}
+
+		req.logIn(user, (err) => {
+			if (err) {
+				return next(err);
+			}
+			// Authentication successful, redirect to content page
+			return res.redirect("/content");
+		});
+	})(req, res, next);
+});
 
 app.get("/inventory", isAuthenticated, (req, res) => {
 	const user = req.user;

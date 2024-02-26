@@ -70,7 +70,6 @@ const userSchema = new mongoose.Schema({
 });
 
 // Function to update inventory based on crop growth
-// Function to update inventory based on crop growth
 userSchema.methods.updateInventory = async function () {
 	// Iterate over crops asynchronously
 	for (const crop of this.cropsGrown) {
@@ -92,7 +91,7 @@ userSchema.methods.updateInventory = async function () {
 						await twilioClient.messages.create({
 							body: `Alert: You used ${quantityToSubtract} units of ${resource.itemName}. You have ${item.quantity} units left for ${crop.cropName}.`,
 							to: this.phone,
-							from: "+1 386 310 3856", // Replace with your Twilio phone number
+							from: "+1 386 310 3856",
 						});
 					} else {
 						// Handle the case where the quantity is not enough

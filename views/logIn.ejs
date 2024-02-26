@@ -121,31 +121,18 @@
 		</nav>
 
 		<div class="main">
-			<form class="form" action="/login" method="post">
-				<div class="title noto-sans-title">
-					Welcome,<br /><span>log in to continue</span>
-				</div>
-				<input
-					type="email"
-					placeholder="Email"
-					name="email"
-					class="input noto-sans-title"
-				/>
-				<input
-					type="password"
-					placeholder="Password"
-					name="password"
-					class="input"
-				/>
+			<form class="form" action="/login" method="post" onsubmit="return validateForm()">
+					<div class="title noto-sans-title">
+							Welcome,<br /><span>log in to continue</span>
+					</div>
+					<input type="email" placeholder="Email" name="email" class="input noto-sans-title" />
+					<input type="password" placeholder="Password" name="password" class="input" />
 
-				<button
-					type="submit"
-					class="button-confirm noto-sans-title vt323-regular"
-				>
-					Let's go →
-				</button>
+					<button type="submit" class="button-confirm noto-sans-title vt323-regular">
+							Let's go →
+					</button>
 			</form>
-		</div>
+	</div>
 
 		<!-- <footer
 			class="d-flex flex-wrap justify-content-between align-items-center py-3 border-top"
@@ -195,6 +182,28 @@
 					document.body.classList.remove("dark-mode");
 				}
 			});
+
+			function validateForm() {
+				// Get values from input fields
+				var email = document.getElementsByName("email")[0].value;
+				var password = document.getElementsByName("password")[0].value;
+
+				// Check if any field is empty
+				if (email.trim() === "" || password.trim() === "") {
+						// Show alert if any field is empty
+						alert("Please fill in all fields");
+						return false; // Prevent form submission
+				}
+
+				// Continue with form submission if all fields are filled
+				return true;
+
+				const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    if (error) {
+      alert(error);
+    }
+		}
 		</script>
 	</body>
 </html>
