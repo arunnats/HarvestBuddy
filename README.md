@@ -1,4 +1,4 @@
-![Screenshot 2024-02-26 125019](https://github.com/arunnats/HarvestBuddy/assets/118368673/f8965c96-f9cc-4412-8b42-9dc8cd6a54e6)# Harvest Buddy: Revolutionizing The Farming Landscape
+# Harvest Buddy: Revolutionizing The Farming Landscape
 ## Built at the Bit N Build International Hackathon Finals (Feb 24, 25 2024)
 
 Introducing Harvest Buddy, a software solution crafted by our team, The Hackstreet Boys. Harvest Buddy stands as a smart inventory and alert system poised to redefine the agricultural realm. With SMS notifications providing real-time updates on inventory consumption and crop growth, coupled with AI-powered recommendations for optimal produce utilization and market value assessments, Harvest Buddy brings innovation to the heart of farming operations. The application's engaging retro video game-themed user interface adds a touch of nostalgia to its modern functionalities, making Harvest Buddy not just a tool but a game-changer in the dynamic landscape of agriculture. 
@@ -9,6 +9,8 @@ Introducing Harvest Buddy, a software solution crafted by our team, The Hackstre
 
 ## Features
 -Extensive inventory management system with real time updates 
+
+![Screenshot 2024-02-26 125019](https://github.com/arunnats/HarvestBuddy/assets/118368673/f8965c96-f9cc-4412-8b42-9dc8cd6a54e6)
 
 <img width="633" alt="Screenshot 2024-02-26 123247" src="https://github.com/arunnats/HarvestBuddy/assets/118368673/7eeeb39b-ab78-4a02-8b5e-0bbb2122e203">
 ![Screenshot 2024-02-26 125019](https://github.com/arunnats/HarvestBuddy/assets/118368673/4253c153-e4f4-44f7-8aa7-433e08efde79)
