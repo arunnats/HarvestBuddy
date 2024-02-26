@@ -1,4 +1,4 @@
-# Movie-Match: Revolutionizing Your Movie-Watching Experience
+# Harvest Buddy: Revolutionizing The Farming Landscape
 ## Built at the Bit N Build International Hackathon Finals (Feb 24, 25 2024)
 
 Introducing Harvest Buddy, a software solution crafted by our team, The Hackstreet Boys. Harvest Buddy stands as a smart inventory and alert system poised to redefine the agricultural realm. With SMS notifications providing real-time updates on inventory consumption and crop growth, coupled with AI-powered recommendations for optimal produce utilization and market value assessments, Harvest Buddy brings innovation to the heart of farming operations. The application's engaging retro video game-themed user interface adds a touch of nostalgia to its modern functionalities, making Harvest Buddy not just a tool but a game-changer in the dynamic landscape of agriculture. 
