@@ -9,20 +9,25 @@ Introducing Harvest Buddy, a software solution crafted by our team, The Hackstre
 
 ## Features
 -Extensive inventory management system with real time updates 
+
 <img width="633" alt="Screenshot 2024-02-26 123247" src="https://github.com/arunnats/HarvestBuddy/assets/118368673/7eeeb39b-ab78-4a02-8b5e-0bbb2122e203">
 ![Screenshot 2024-02-26 125019](https://github.com/arunnats/HarvestBuddy/assets/118368673/4253c153-e4f4-44f7-8aa7-433e08efde79)
 
 -SMS and Email Updates
+
 ![IMG-20240226-WA0007](https://github.com/arunnats/HarvestBuddy/assets/118368673/8e3a2c49-6f82-4334-b967-2e3af32b280e)
 
 -Coordinate system from OpenMapBox
+
 ![image](https://github.com/arunnats/HarvestBuddy/assets/118368673/8b68decb-e124-44ef-b7e4-4cb2a8de281f)
 
 
 -Real time weather and disaster updates
+
 ![image](https://github.com/arunnats/HarvestBuddy/assets/118368673/7315e231-a847-499c-831d-a8e5661cdab5)
 
 -OpenAI Crop recommendations
+
 ![image](https://github.com/arunnats/HarvestBuddy/assets/118368673/6a83ccf9-5c92-4cdd-bfe5-7e0e126aecc1)
 (Information for growing strawberries at Ooty)
 
