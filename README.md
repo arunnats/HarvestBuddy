@@ -29,6 +29,7 @@ Introducing Harvest Buddy, a software solution crafted by our team, The Hackstre
 -OpenAI Crop recommendations
 
 ![image](https://github.com/arunnats/HarvestBuddy/assets/118368673/6a83ccf9-5c92-4cdd-bfe5-7e0e126aecc1)
+
 (Information for growing strawberries at Ooty)
 
 ## Tech Stack
