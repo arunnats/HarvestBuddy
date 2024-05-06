@@ -37,10 +37,10 @@ Introducing Harvest Buddy, a software solution crafted by our team, The Hackstre
 ## Tech Stack
 
 - Database: MongoDB
-- Backend: Javascript, Python
-- Framworks: NodeJS, FuseJS
+- Backend: Javascript
+- Framworks: NodeJS, FuseJS, Twilio
 - AI Engine: OpenAI's GPT-4-turbo
-- API Integration: IMDB, OMDB, TMDB
+- API Integration: MapBox API
 
 ## Authors
 
